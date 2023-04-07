@@ -4,7 +4,7 @@
 | --------------  | ------ |
 | Nathan Maire    | 313202 |
 | Edouard Lacroix | XXXXXX |
-| Nicolas Jimenez | XXXXXX |
+| Nicolas Jimenez | 283057 |
 
 [Milestone 1](#milestone-1) • [Milestone 2](#milestone-2) • [Milestone 3](#milestone-3)
 
@@ -66,8 +66,25 @@ Number of countries represented: 69 + “global” (world)
 
 
 > - What others have already done with the data?
+
+We saw that multiple other projects were done with this spotify dataset. The three we looked at were from the kaggle database. 
+The first one is a simple exloratory data analysis where they try to understand the key informations. 
+https://www.kaggle.com/code/dhruvildave/spotify-charts-exploratory-data-analysis
+The second one is an exploratory data analysis that only focus on Taylor Swift. 
+https://www.kaggle.com/code/aneridalwadi/exploratory-data-analysis-taylor-swift/notebook
+
 > - Why is your approach original?
+
+We are taking an original approach because we are integrating multiple datasets such as the Shazam one to add key information on the charts that is not present in the spotify dataset. Furthermore, our visualisation is very different from them since we are integrating a map. Finally, our goal is not just to give raw information to the user but in an interactive way.
+
 > - What source of inspiration do you take? Visualizations that you found on other websites or magazines (might be unrelated to your data).
+
+We looked specially at maps because we wanted to have something by countries. We used the following two data maps as examples for our project.
+
+https://public.tableau.com/app/profile/andr.oliveira8781/viz/Banksy/Home
+
+http://www.puffpuffproject.com/languages.html
+
 > - In case you are using a dataset that you have already explored in another context (ML or ADA course, semester project...), you are required to share the report of that work to outline the differences with the submission for this class.
 
 ## Milestone 2 (7th May, 5pm)
