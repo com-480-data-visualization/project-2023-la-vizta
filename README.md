@@ -3,7 +3,7 @@
 | Student's name  | SCIPER |
 | --------------  | ------ |
 | Nathan Maire    | 313202 |
-| Edouard Lacroix | XXXXXX |
+| Edouard Lacroix | 313192 |
 | Nicolas Jimenez | XXXXXX |
 
 [Milestone 1](#milestone-1) • [Milestone 2](#milestone-2) • [Milestone 3](#milestone-3)
@@ -45,7 +45,10 @@ always recommend what we "want" to hear - similar titles as the ones that are al
 
 More concretely, we would like to display a map of the world. Data could be shown as shapes, popups, graphs, colors as well as text. 
 # EDOU -> MORE ON THIS
-.... The website will consist of a map with colors related to genre and popups to show tracks and genres that have been the most streamed per country. 
+The website will consist of a map where each country will have:
+- a color correspoding to the most listened genre 
+- a popup on clickEvent with the top 5 most streamed tracks and a chart to naviguate and see the evolution of their streams over time.
+Moreover, we would like to add ... (filter) 
 
 ### Exploratory Data Analysis
 
@@ -56,8 +59,17 @@ More concretely, we would like to display a map of the world. Data could be show
 "Top200" and "Viral50" charts are refreshed every 2-3 days and data has been collected since 2017 summing it up to around 3.5GB of data. 
 
 Each row contains: (title, rank, date, artists, url, region, chart, trend, streams)
-The “chart” column is for the ‘top200’ (=200 most streamed song) and ‘viral50’ (=TODO)
-Our focus will mostly be on the region (=country) and streams.
+
+We are going to focus only on:
+- The "title": title of the music ( waka waka )
+- The "rank": the rank of the song between the top200 or viral50
+- The "artists": the artists on the song 
+- The "region": the country ( Germany )
+- The “chart”: either ‘top200’ (=200 most streamed song) or ‘viral50’ (=50 most viral songs)
+- The "streams": the music streams
+
+
+Virality is mesure with the streams, the saves in playlist, shares and time listened on a timeframe given (1 day, 1 week ...)
 Number of rows in the dataset: XX
 Number of countries represented: 69 + “global” (world)
 
