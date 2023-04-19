@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --white: #FFFFFF50;
+  --white: #FFFFFF60;
 }
 
 html, body {
@@ -29,6 +29,10 @@ html, body {
 
 .grayscale-tilelayer {
   filter: sepia(100%) grayscale(70%) brightness(40%) contrast(100%)
+}
+
+.leaflet-control-attribution {
+  display: none
 }
 
 .leaflet-popup-content-wrapper {

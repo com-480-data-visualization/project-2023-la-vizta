@@ -18,3 +18,6 @@ export interface Track {
     genreName: GenreName
 }
 export type Color = string
+
+export type TracksPerRegion = {[region: Region]: Track[]}
+export type TopGenresPerRegion = {[region: Region]: GenreName[]}

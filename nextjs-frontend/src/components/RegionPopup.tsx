@@ -1,6 +1,8 @@
 
-import { Popup } from "react-leaflet";
+import { Popup, useMapEvent } from 'react-leaflet';
 import { Region, Track, GenreName } from '~/types';
+import { useEffect, useRef } from 'react';
+import { MAP_BOUNDS } from './Map';
 
 // <img width={200} height={200} src='https://media-cdn.tripadvisor.com/media/photo-l/1a/f6/f1/b8/default-avatar-2020-22.jpg'></img> 
 
@@ -45,11 +47,12 @@ const CGenre = ( { i, genre }: { i: number, genre: string } ) => {
 }
 
 const RegionPopup = ( { region, topGenres, tracks }: IRegionPopup ) => {
+
     return (
         <Popup>
             <div>
                 <div className='m-auto max-w-min whitespace-nowrap font-Playfair text-2xl'>{region}</div>
-                <div className="m-auto w-14 border-t-2 border-black mt-1 mb-3"></div>
+                <div className='m-auto w-14 border-t-2 border-black mt-1 mb-3'></div>
                 <div className='flex gap-10 text-base font-Jetbrains'>
                     <div className=''>
                         {topGenres.map( (genre, j) => <CGenre key={`genre-${j}`} i={j + 1} genre={genre} /> )}

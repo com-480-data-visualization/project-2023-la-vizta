@@ -40,7 +40,7 @@ export default function Dropdown()
                 </div>
                 { show &&
                     Object.keys(propositions).filter(k => k !== selected).map( k => 
-                        <div className="font-Azeret flex flex-col mt-1 cursor-pointer rounded px-2 py-1 hover:bg-[#FFFFFFCC] transition-colors" onClick={select(k)}>
+                        <div className="font-Azeret flex flex-col mt-1 cursor-pointer rounded px-2 py-1 hover:bg-[#FFFFFFFF] transition-colors" onClick={select(k)} key={`prop-${k}`}>
                             {propositions[k].name}
                             <div className="font-Open-Sans text-gray-900 text-sm truncate">{ propositions[selected].desc }</div>
                         </div>
