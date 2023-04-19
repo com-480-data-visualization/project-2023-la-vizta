@@ -27,7 +27,7 @@ const mapOptions = {
 
 
 const MapWrapper = () => {
-	const { data: regions, isLoading: isRegionsLoading } = ("/country/all");
+	const { data: regions, isLoading: isRegionsLoading } = useFetch("/country/all");
 	const { data: genres, isLoading: isGenresLoading } = useFetch("/genres");
 
     return (
