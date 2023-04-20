@@ -1,5 +1,6 @@
 import os
 import spotipy
+import pandas as pd
 from tqdm import tqdm
 from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOAuth
 from dotenv import load_dotenv
@@ -28,20 +29,27 @@ def fetch_genres(ids: list):
             genres.append(artist['genres'])
     return genres
 
-def query_tracks(offset: int):
-    query = f"select title, artist, url from spotify_charts limit 100 offset {offset}"
-    df = select_db(query)
-    df['url'] = df['url'].apply(lambda x: x.replace('https://open.spotify.com/track/', ''))
-    print(df)
-    genres = fetch_genres(df['id'])
-    print(genres)
+def query_tracks(df):
+    genres = fetch_genres(df['url'])
     df['genres'] = genres
-    print(df)
     df.to_csv('./genres.csv', index=False, mode='a', header=False) 
 
 
-query = f"select distinct on (url) title, artist, url from spotify_charts group by (url)"
-res = select_db(query)
-print(res)
+# query = f"select distinct on (url) title, artist, url from spotify_charts group by (title, artist, url)"
+# res = select_db(query)
+# res['url'] = res['url'].apply(lambda x: x.replace('https://open.spotify.com/track/', ''))
+# res.to_csv('./cached_db.csv', index=False) 
 
-# query_tracks(0)
+res = pd.read_csv('cached_db.csv')
+
+start = pd.read_csv('genres.csv')
+computed = start.shape[0]
+
+samples = 100
+rows = res.shape[0] - computed
+
+print(computed, rows, samples)
+
+for i in tqdm(range(computed, rows, samples)):
+    df = res.take(range(i, i + samples))
+    query_tracks(df)
