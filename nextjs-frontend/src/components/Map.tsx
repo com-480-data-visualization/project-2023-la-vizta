@@ -1,12 +1,9 @@
-import { useState, useEffect } from "react";
-import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
-import L from "leaflet";
+import { MapContainer, TileLayer } from "react-leaflet"
+import L from "leaflet"
 
-import RegionPopup from "./RegionPopup";
+import Country from "./Country";
 import Navbar from "./Navbar";
 import useFetch from "~/hooks/useFetch";
-
-import { Track, GenreName, Color, RegionGeometry, Region } from "~/types";
 
 import "leaflet/dist/leaflet.css";
 
@@ -24,11 +21,11 @@ const mapOptions = {
     maxBounds: MAP_BOUNDS,
 }
 
-
-
 const MapWrapper = () => {
 	const { data: regions, isLoading: isRegionsLoading } = useFetch("/country/all");
 	const { data: genres, isLoading: isGenresLoading } = useFetch("/genres");
+
+    console.log(regions, genres)
 
     return (
         <MapContainer 
