@@ -3,7 +3,9 @@ organization := "com.example"
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val root = (project in file(".")).enablePlugins(PlayScala).settings(
+    routesImport += "utils.Binders._"
+)
 
 scalaVersion := "2.13.10"
 

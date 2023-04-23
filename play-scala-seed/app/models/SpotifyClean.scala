@@ -3,10 +3,8 @@ package models
 import models.Types._
 
 case class SpotifyClean(
-	               title: Title,
-	               artist: Artist,
+                   id: TrackId,
 	               date: Date,
 	               rank: Rank,
-	               id: TrackId,
 	               region: Region,
 	               streams: Streams );

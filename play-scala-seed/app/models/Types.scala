@@ -16,10 +16,10 @@ object Types {
 	type Trend = String
 	type Streams = Int
 
-	// From genre
+	// From genres
 	type GenreId = Int
 	type Genre = String
 	
-	// From SpotifyClean
+	// From tracks
 	type TrackId = String
 }
