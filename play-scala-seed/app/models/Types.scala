@@ -19,4 +19,7 @@ object Types {
 	// From genre
 	type GenreId = Int
 	type Genre = String
+	
+	// From SpotifyClean
+	type TrackId = String
 }
