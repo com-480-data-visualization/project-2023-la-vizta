@@ -1,3 +1,5 @@
+import { paletteGenre } from "./constants"
+
 export type Geometry = string
 export type RegionGeometry = [Region, Geometry]
 

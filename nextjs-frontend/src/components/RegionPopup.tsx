@@ -1,6 +1,7 @@
 import { Popup } from "react-leaflet";
 import { Region, Track, GenreName, Color } from "~/types";
 import StreamChart from "./StreamChart";
+import { paletteGenre } from "~/constants";
 
 // <img width={200} height={200} src='https://media-cdn.tripadvisor.com/media/photo-l/1a/f6/f1/b8/default-avatar-2020-22.jpg'></img>
 
@@ -52,7 +53,6 @@ interface IRegionPopup {
   region: Region;
   topGenres: GenreName[];
   tracks: Track[];
-  paletteGenre: { [genre: GenreName]: Color };
 }
 
 interface ICGenre {
@@ -105,7 +105,6 @@ const RegionPopup = ({
   region,
   topGenres,
   tracks,
-  paletteGenre,
 }: IRegionPopup) => {
   const a = topGenres[0];
   console.log(topGenres[0]);
@@ -121,7 +120,7 @@ const RegionPopup = ({
         <div className="m-auto w-14 border-t-2 border-black mt-1 mb-3"></div>
         <div className="flex gap-10 text-base font-Jetbrains">
           <div className="">
-            {topGenres.map((genre: string, j) => (
+            {topGenres.map((genre: GenreName, j) => (
               <CGenre
                 key={`genre-${j}`}
                 i={j + 1}
