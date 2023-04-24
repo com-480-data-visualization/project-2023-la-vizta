@@ -6,7 +6,7 @@ import slick.jdbc.PostgresProfile.api._
 
 class TracksTable(tag: Tag) extends Table[Tracks](_tableTag = tag, _tableName = "tracks") {
 	
-	def id = column[TrackId]("id")
+	def id = column[TrackId]("id", O.PrimaryKey)
 	def title = column[Title]("title")
 	def artist = column[Artist]("artist")
 

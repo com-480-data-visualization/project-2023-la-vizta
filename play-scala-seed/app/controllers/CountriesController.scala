@@ -1,6 +1,6 @@
 package controllers
 
-import models.dao.CountryDAOImpl
+import models.dao.{CountriesDAO, CountriesDAOImpl}
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -13,9 +13,9 @@ import scala.concurrent.ExecutionContext
  * application's home page.
  */
 @Singleton
-class CountryController @Inject()(val dbConfigProvider: DatabaseConfigProvider, val controllerComponents: ControllerComponents)(implicit ec: ExecutionContext) extends BaseController {
+class CountriesController @Inject()(val dbConfigProvider: DatabaseConfigProvider, val controllerComponents: ControllerComponents)(implicit ec: ExecutionContext) extends BaseController {
 
-    val dao = new CountryDAOImpl(dbConfigProvider)
+    val dao: CountriesDAO = new CountriesDAOImpl(dbConfigProvider)
 
 //    implicit val countryWrites: Writes[Country] = (
 //        (JsPath \ "id")  .write[Int]    and
@@ -23,8 +23,7 @@ class CountryController @Inject()(val dbConfigProvider: DatabaseConfigProvider, 
 //        (JsPath \ "geom").write[String]
 //    )(unlift(Country.unapply))
 
-    def getCountriesGeometry: Action[AnyContent] = Action.async( {
-        dao.getCountriesGeometry
-            .map( c => Ok(Json.toJson(c)) )
-    })
+    def getAll: Action[AnyContent] = Action.async( {
+        dao.getAll.map( c => Ok(Json.toJson(c)) )
+    } )
 }
