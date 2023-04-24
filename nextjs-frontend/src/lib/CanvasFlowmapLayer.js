@@ -107,6 +107,13 @@ const CanvasFlowmapLayer = L.GeoJSON.extend({
     return this;
   },
 
+  _setEvents: function(setter) {
+    setter('move', this._resetCanvas, this);
+    setter('moveend', this._resetCanvasAndWrapGeoJsonCircleMarkers, this);
+    setter('resize', this._resizeCanvas, this);
+    setter('zoomanim', this._animateZoom, this);
+  },
+
   onAdd: function(map) {
     L.GeoJSON.prototype.onAdd.call(this, map);
 
@@ -120,18 +127,10 @@ const CanvasFlowmapLayer = L.GeoJSON.extend({
 
     // create a reference to both canvas elements in an array for convenience
     this._customCanvases = [this._canvasElement, this._animationCanvasElement]
+    this._setEvents( map.on )
 
-    // establish custom event listeners
-    map.on('move', this._resetCanvas, this);
-    map.on('moveend', this._resetCanvasAndWrapGeoJsonCircleMarkers, this);
-    map.on('resize', this._resizeCanvas, this);
-    map.on('zoomanim', this._animateZoom, this);
-
-    // calculate initial size and position of canvas
-    // and draw its content for the first time
     this._resizeCanvas();
     this._resetCanvasAndWrapGeoJsonCircleMarkers();
-
     return this;
   },
 
@@ -139,12 +138,7 @@ const CanvasFlowmapLayer = L.GeoJSON.extend({
     L.GeoJSON.prototype.onRemove.call(this, map);
     this._clearCanvas();
     this._customCanvases.forEach( canvas => L.DomUtil.remove(canvas) );
-
-    map.off('move', this._resetCanvas, this);
-    map.off('moveend', this._resetCanvasAndWrapGeoJsonCircleMarkers, this);
-    map.off('resize', this._resizeCanvas, this);
-    map.off('zoomanim', this._animateZoom, this);
-
+    this._setEvents( map.off )
     return this;
   },
 
@@ -219,8 +213,7 @@ const CanvasFlowmapLayer = L.GeoJSON.extend({
   },
 
   clearAllPathSelections: function() { this._updateDisplayAndResetCanvas( () => false ) },
-  // TODO: origin
-  selectAllFeaturesForPathDisplay: function() { this._updateDisplayAndResetCanvas( feature => feature.properties.isOrigin ) },
+  selectAllFeaturesForPathDisplay: function() { this._updateDisplayAndResetCanvas( feature => this.option.isOrigin( feature ) ) },
 
   _insertCustomCanvasElement: function(map, options) {
     const canvas = L.DomUtil.create('canvas', 'leaflet-zoom-animated');
@@ -231,62 +224,23 @@ const CanvasFlowmapLayer = L.GeoJSON.extend({
     return canvas;
   },
 
-
-  _getSharedOriginOrDestinationFeatures: function(testFeature) {
-    // TODO: origin
-    var isOriginFeature = testFeature.properties.isOrigin;
-    var sharedOriginFeatures = [];
-    var sharedDestinationFeatures = [];
-
-    if (isOriginFeature) {
-      // for an ORIGIN point that was interacted with,
-      // make an array of all other ORIGIN features with the same ORIGIN ID field
-      var originUniqueIdField = this.options.originAndDestinationFieldIds.originUniqueIdField;
-      var testFeatureOriginId = testFeature.properties[originUniqueIdField];
-      sharedOriginFeatures = this.features.filter(function(feature) {
-        return feature.properties.isOrigin &&
-          feature.properties[originUniqueIdField] === testFeatureOriginId;
-      });
-    } else {
-      // for a DESTINATION point that was interacted with,
-      // make an array of all other ORIGIN features with the same DESTINATION ID field
-      var destinationUniqueIdField = this.options.originAndDestinationFieldIds.destinationUniqueIdField;
-      var testFeatureDestinationId = testFeature.properties[destinationUniqueIdField];
-      sharedDestinationFeatures = this.features.filter(function(feature) {
-        return feature.properties.isOrigin &&
-          feature.properties[destinationUniqueIdField] === testFeatureDestinationId;
-      });
-    }
-
-    return {
-      isOriginFeature: isOriginFeature, // Boolean
-      sharedOriginFeatures: sharedOriginFeatures, // Array of features
-      sharedDestinationFeatures: sharedDestinationFeatures // Array of features
-    };
-  },
-
   _animateZoom: function(e) {
-    // see: https://github.com/Leaflet/Leaflet.heat
-    var scale = this._map.getZoomScale(e.zoom);
-    var offset = this._map._getCenterOffset(e.center)._multiplyBy(-scale).subtract(this._map._getMapPanePos());
-
-    if (L.DomUtil.setTransform) {
-      this._customCanvases.forEach(function(canvas) {
-        L.DomUtil.setTransform(canvas, offset, scale);
-      });
-    } else {
-      this._customCanvases.forEach(function(canvas) {
-        canvas.style[L.DomUtil.TRANSFORM] = L.DomUtil.getTranslateString(offset) + ' scale(' + scale + ')';
-      });
-    }
+    const scale = this._map.getZoomScale(e.zoom);
+    const offset = this._map._getCenterOffset(e.center)._multiplyBy(-scale).subtract(this._map._getMapPanePos());
+    this._customCanvases.forEach( canvas => {
+      if (L.DomUtil.setTransform)
+        L.DomUtil.setTransform(canvas, offset, scale)
+      else
+        canvas.style[L.DomUtil.TRANSFORM] = L.DomUtil.getTranslateString(offset) + ' scale(' + scale + ')'
+    } )
   },
 
   _resizeCanvas: function() {
-    var size = this._map.getSize();
-    this._customCanvases.forEach(function(canvas) {
-      canvas.width = size.x;
-      canvas.height = size.y;
-    });
+    const { x, y } = this._map.getSize();
+    this._customCanvases.forEach( canvas => {
+      canvas.width = x
+      canvas.height = y
+    } )
     this._resetCanvas();
   },
 
@@ -294,7 +248,7 @@ const CanvasFlowmapLayer = L.GeoJSON.extend({
     if (!this._map) return;
 
     // update the canvas position and redraw its content
-    var topLeft = this._map.containerPointToLayerPoint([0, 0]);
+    const topLeft = this._map.containerPointToLayerPoint([0, 0]);
     this._customCanvases.forEach(function(canvas) {
       L.DomUtil.setPosition(canvas, topLeft);
     });

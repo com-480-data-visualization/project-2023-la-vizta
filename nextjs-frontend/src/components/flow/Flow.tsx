@@ -2,7 +2,7 @@ import { useMap } from 'react-leaflet';
 
 import Country from './Country';
 
-import CanvasFlowmapLayer from '~/lib/CanvasFlowmapLayer'
+import CanvasFlowmapLayer from '~/lib/CFLCopy'
 import useFetch from '~/hooks/useFetch';
 import { Countries } from '~/types';
 import { useEffect } from 'react';
@@ -70,11 +70,7 @@ export default function Flow()
             features: buildFeatures(history, regionsMap)
         }
 
-        console.log(map);
-        
-        const flowLayer = new CanvasFlowmapLayer( features )
-        console.log(flowLayer);
-        flowLayer.addTo(map);
+        const flowLayer = new CanvasFlowmapLayer(features).addTo(map)
         flowLayer.bringToFront()
 
         return () => {
