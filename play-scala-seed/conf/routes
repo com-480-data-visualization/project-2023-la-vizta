@@ -9,7 +9,7 @@
 # GET     /streams                    controllers.SpotifyController.getMostStreamedPerCountry
 GET     /countries/all                controllers.CountriesController.getAll
 GET     /genres                     controllers.GenresController.getGenres
-GET     /clean/histories            controllers.SpotifyCleanController.histories(ids: Seq[(String,String)])
+GET     /clean/histories            controllers.SpotifyCleanController.histories(region: String, ids: Seq[String])
 GET     /clean/history              controllers.SpotifyCleanController.history(id: String)
 GET     /clean/date                 controllers.SpotifyCleanController.date(d: String)
 

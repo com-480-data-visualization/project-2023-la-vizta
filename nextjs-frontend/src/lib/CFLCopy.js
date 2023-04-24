@@ -6,20 +6,20 @@ const CanvasFlowmapLayer = L.GeoJSON.extend({
     originAndDestinationFieldIds: {
         originUniqueIdField: 'origin_id',
         originGeometry: {
-        x: 'origin_lon',
-        y: 'origin_lat'
+            x: 'origin_lon',
+            y: 'origin_lat'
         },
         destinationUniqueIdField: 'destination_id',
         destinationGeometry: {
-        x: 'destination_lon',
-        y: 'destination_lat'
+            x: 'destination_lon',
+            y: 'destination_lat'
         }
     },
     canvasBezierStyle: {
         type: 'simple',
         symbol: {
         strokeStyle: 'rgba(255, 0, 51, 0.8)',
-        lineWidth: 0.75,
+        lineWidth: 4,
         lineCap: 'round',
         shadowColor: 'rgb(255, 0, 51)',
         shadowBlur: 1.5

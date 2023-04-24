@@ -32,13 +32,23 @@ class SpotifyCleanDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConf
         }
     }
     
-    def histories(ids: Seq[(TrackId, Region)]): Future[Seq[SpotifyClean]] = {
-        val idsString = ids.map( v => f"('${v._1}','${v._2}')" ).mkString("(", ",", ")")
+//    def histories(region: Region, ids: Seq[TrackId]): Future[Seq[SpotifyClean]] = {
+//        val idsString = ids.map(v => f"('${v._1}','${v._2}')").mkString("(", ",", ")")
+//        db run {
+//            sql"""
+//			select * from spotify_clean
+//			where (id, region) in #${idsString}
+//			""".as[SpotifyClean]
+//        }
+//    }
+    
+    def histories(region: Region, ids: Seq[TrackId]): Future[Seq[SpotifyClean]] = {
         db run {
-            sql"""
-              select * from spotify_clean
-              where (id, region) in #${idsString}
-            """.as[SpotifyClean]
+            val q = for (
+                s <- spotify
+                if ( s.region === region && s.id.inSetBind(ids)  )
+            ) yield s
+            q.result
         }
     }
     

@@ -31,11 +31,16 @@ class SpotifyCleanController @Inject()(val dbConfigProvider: DatabaseConfigProvi
         })
     })
     
-    def histories(ids: Seq[(TrackId,Region)]): Action[AnyContent] = Action.async( {
-        dao.histories(ids).map( r => {
-            val r_ = r.groupBy(_.id).map( kv => (kv._1,
-                kv._2.groupBy(_.region).map( ts => (ts._1, ts._2.map( t => (t.date, t.rank, t.streams))))
-            ))
+    def histories(region: Region, ids: Seq[TrackId]): Action[AnyContent] = Action.async( {
+        dao.histories(region, ids).map( r => {
+            val r_ = r
+                .groupBy(_.id)
+                .view
+                .mapValues( data => (
+                    data.map(_.date),
+                    data.map(_.rank),
+                    data.map(_.streams)
+                ) )
             Ok(Json.toJson(r_))
         })
     })
