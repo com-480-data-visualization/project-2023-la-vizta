@@ -16,7 +16,7 @@ object Types {
 	type Trend = String
 	type Streams = Int
 
-	// From genres
+	// From genre
 	type GenreId = Int
 	type Genre = String
 	

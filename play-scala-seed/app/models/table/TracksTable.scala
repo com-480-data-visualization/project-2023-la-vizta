@@ -1,14 +1,14 @@
 package models.table
 
-import models.{SpotifyClean, Track}
+import models.{SpotifyClean, Tracks}
 import models.Types._
 import slick.jdbc.PostgresProfile.api._
 
-class TrackTable(tag: Tag) extends Table[Track](_tableTag = tag, _tableName = "tracks") {
+class TracksTable(tag: Tag) extends Table[Tracks](_tableTag = tag, _tableName = "tracks") {
 	
 	def id = column[TrackId]("id")
 	def title = column[Title]("title")
 	def artist = column[Artist]("artist")
 
-	def * = (id, title, artist) <> (Track.tupled, Track.unapply)
+	def * = (id, title, artist) <> (Tracks.tupled, Tracks.unapply)
 }

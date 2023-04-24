@@ -3,7 +3,7 @@ package models
 import models.Types._
 
 case class SpotifyClean(
-                   id: TrackId,
+	               id: TrackId,
 	               date: Date,
 	               rank: Rank,
 	               region: Region,

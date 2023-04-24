@@ -10,7 +10,6 @@ export default function Navbar()
     const map = useMap()
 
     const onWrapperClick = (e) => {
-        // TODO: make this work
         e.preventDefault()
         e.stopPropagation()
     }

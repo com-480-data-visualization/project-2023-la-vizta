@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi'
+import { useRouter } from 'next/router'
 
 interface Proposition {
     name: string;
@@ -9,10 +10,8 @@ interface Proposition {
 }
 
 const propositions: {[key: string]: Proposition} = {
-    "genres": { name: 'Genres', req: '/genres', desc: 'Some more description on the thing selected' },
-    "other":  { name: 'Other',  req: '/genres', desc: 'Some more description on the thing selected' },
-    "fun":    { name: 'Fun',    req: '/genres', desc: 'Some more description on the thing selected' },
-    "stuff":  { name: 'Stuff',  req: '/genres', desc: 'Some more description on the thing selected' },
+    "genres": { name: 'Genres', req: '/genres', desc: 'Most listened genres per country' },
+    "flow":   { name: 'Flow',   req: '/flow',   desc: 'Flow graph of a given track' },
 }
 
 export default function Dropdown() 
@@ -23,7 +22,7 @@ export default function Dropdown()
     const select = (key: keyof propositions) => () => {
         setSelected(key)
         setShow(false)
-        // TODO: trigger update request
+        router.push(propositions[key].req)
     }
 
     const onSelectedClick = () => {
