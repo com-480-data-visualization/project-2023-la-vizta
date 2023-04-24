@@ -1,8 +1,8 @@
 package models
 
-import models.Types.{Geometry, Region}
+import models.Types.{CountryId, Region, Geometry}
 
 case class Country(
-                  id: Int,
+                  id: CountryId,
                   name: Region,
                   geom: Geometry );
