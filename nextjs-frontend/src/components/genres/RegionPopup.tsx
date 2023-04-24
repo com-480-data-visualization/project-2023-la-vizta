@@ -1,9 +1,9 @@
 import { Popup } from "react-leaflet";
-import { Region, Track, GenreName, Color } from "~/types";
-import StreamChart from "./StreamChart";
-import { paletteGenre } from "~/constants";
 
-// <img width={200} height={200} src='https://media-cdn.tripadvisor.com/media/photo-l/1a/f6/f1/b8/default-avatar-2020-22.jpg'></img>
+import StreamChart from "./StreamChart";
+
+import { paletteGenre } from "~/constants";
+import { Region, Track, GenreName, Color } from "~/types";
 
 // const rankColors = [
 //     '#CBAA18',
@@ -47,7 +47,6 @@ const data = [
 
 const rankColors = ["#FF9D00", "#FF5400", "#B01A2E", "#9A9A9A", "#9A9A9A"];
 
-const fontGenres = ["xx-large", "x-large", "large", "small", "small"];
 
 interface IRegionPopup {
   region: Region;
@@ -61,10 +60,23 @@ interface ICGenre {
   color: string;
 }
 
+
+const CGenre = ({ i, genre, color }: ICGenre) => {
+	const fontGenres = ["xx-large", "x-large", "large", "small", "small"];
+	return (
+	  <p
+		className="font-Quicksand pb-2 leading-none"
+		style={{ color: color, fontSize: fontGenres[i - 1] }}
+	  >
+		{genre}
+	  </p>
+	);
+  };
+
 const CTrack = ({ i, track }: { i: number; track: Track }) => {
   return (
-    <div className="">
-      <h4 className="text-lg font-semibold whitespace-nowrap text-ellipsis font-Azeret mb-[-5px] mt-1">
+    <div>
+      <h4 className="max-w-md text-lg font-semibold font-Azeret mb-[-5px] whitespace-nowrap text-ellipsis overflow-hidden mt-2">
         <span>{i}.</span> {track.title}
       </h4>
       <p className="font-Quicksand whitespace-nowrap text-ellipsis">
@@ -74,71 +86,27 @@ const CTrack = ({ i, track }: { i: number; track: Track }) => {
   );
 };
 
-const TEST_TEMPERATURES = [13, 18, 21, 19, 26, 25, 16];
-const DAYS = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-];
-
-const CChart = () => {
-  return <StreamChart data={data} />;
-};
-
-const CGenre = ({ i, genre, color }: ICGenre) => {
-  const font = fontGenres[i - 1];
-  return (
-    <p
-      className="whitespace-nowrap font-Quicksand"
-      style={{ color: color, fontSize: font }}
-    >
-      {genre}
-    </p>
-  );
-};
-
-const RegionPopup = ({
-  region,
-  topGenres,
-  tracks,
-}: IRegionPopup) => {
-  const a = topGenres[0];
-  console.log(topGenres[0]);
-
-  console.log(typeof a);
-  console.log(paletteGenre[a]);
-  return (
-    <Popup>
-      <div>
-        <div className="m-auto max-w-min whitespace-nowrap font-Playfair text-2xl">
-          {region}
-        </div>
-        <div className="m-auto w-14 border-t-2 border-black mt-1 mb-3"></div>
-        <div className="flex gap-10 text-base font-Jetbrains">
-          <div className="">
-            {topGenres.map((genre: GenreName, j) => (
-              <CGenre
-                key={`genre-${j}`}
-                i={j + 1}
-                genre={genre}
-                color={paletteGenre[genre] || "white"}
-              />
-            ))}
-          </div>
-          <div className="">
-            {tracks.map((track, j) => (
-              <CTrack key={`track-${j}`} i={j + 1} track={track} />
-            ))}
-          </div>
-        </div>
-        <CChart />
-      </div>
-    </Popup>
-  );
+const RegionPopup = ( {region, topGenres, tracks }: IRegionPopup ) => {
+	return (
+		<div className="absolute right-2 p-4 z-[9000] mt-[50%] translate-y-[-75%] rounded backdrop-blur bg-[color:var(--white)]">
+			<div className="m-auto max-w-min whitespace-nowrap font-Playfair text-2xl">{region}</div>
+			<div className="m-auto w-14 border-t-2 border-black mt-1 mb-3"></div>
+			<div className="flex flex-col text-base font-Jetbrains">
+				{topGenres.map((genre: GenreName, j) => (
+					<CGenre
+						key={`genre-${j}`}
+						i={j + 1}
+						genre={genre}
+						color={paletteGenre[genre] || "white"}
+					/>
+				))}
+				{tracks.map((track, j) => (
+					<CTrack key={`track-${j}`} i={j + 1} track={track} />
+				))}
+			</div>
+			<StreamChart data={data} />
+		</div>
+	);
 };
 
 export default RegionPopup;

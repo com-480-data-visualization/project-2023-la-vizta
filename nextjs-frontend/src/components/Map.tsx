@@ -1,10 +1,6 @@
 import { MapContainer, TileLayer } from "react-leaflet"
 import L from "leaflet"
 
-import Country from "./Country";
-import Navbar from "./Navbar";
-import useFetch from "~/hooks/useFetch";
-
 import "leaflet/dist/leaflet.css";
 
 export const MAP_BOUNDS = L.latLngBounds(
@@ -21,12 +17,7 @@ const mapOptions = {
     maxBounds: MAP_BOUNDS,
 }
 
-const MapWrapper = () => {
-	const { data: regions, isLoading: isRegionsLoading } = useFetch("/country/all");
-	const { data: genres, isLoading: isGenresLoading } = useFetch("/genres");
-
-    console.log(regions, genres)
-
+const MapWrapper = ( { children } ) => {
     return (
         <MapContainer 
             {...mapOptions}
@@ -46,15 +37,7 @@ const MapWrapper = () => {
                 url='https://stamen-tiles-{s}.a.ssl.fastly.net/terrain-background/{z}/{x}/{y}{r}.png'
                 // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <Navbar />
-            { !isRegionsLoading && !isGenresLoading && regions.map( ([name, geom], i) =>
-                <Country
-                    key={`country-${i}`}
-                    name={name} 
-                    geom={geom} 
-                    tracks={genres.tracksPerRegion[name] || []} 
-                    topGenres={genres.topGenresPerRegion[name] || []} />
-            ) }
+            { children }
         </MapContainer>
     )
 }
