@@ -31,11 +31,16 @@ def query_db(callback):
     disconnect_db(conn, cur)
     return res
 
+def select_db(query, args=None):
+    def callback(conn, cur):
+        return pd.read_sql(query, conn, params=args, coerce_float=True)
+    return query_db(callback)
+
 def insert_db(query, args):
     print('Inserting to PostGIS: ', query)
     def callback(conn, cur):
         try:
-            query_args = ','.join(cur.mogrify("(%s, %s, ST_GeomFromGeoJSON(%s))", i).decode('utf-8') for i in args)
+            query_args = ','.join(cur.mogrify("(%s, %s, %s, %s, %s, ST_GeomFromGeoJSON(%s))", i).decode('utf-8') for i in args)
             cur.execute(query + (query_args))
             conn.commit()
         except Exception as e:

@@ -1,9 +1,13 @@
 package models
 
 object Types {
-	// From country
+	// From countries
 	type CountryId = Int
+	type ISO = String
+	type Lat = Double
+	type Lng = Double
 	type Geometry = String
+	type GeoJSON = String
 
 	// From spotify_charts
 	type Title = String

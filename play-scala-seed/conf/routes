@@ -7,9 +7,10 @@
 # GET     /first                      controllers.SpotifyController.get100first
 # GET     /viral                      controllers.SpotifyController.getRecentTopViral50ByCountry
 # GET     /streams                    controllers.SpotifyController.getMostStreamedPerCountry
-GET     /country/all                controllers.CountryController.getCountriesGeometry
+GET     /countries/all                controllers.CountriesController.getAll
 GET     /genres                     controllers.GenresController.getGenres
-GET     /clean/history              controllers.SpotifyCleanController.history(ids: Seq[(String,String)])
+GET     /clean/histories            controllers.SpotifyCleanController.histories(ids: Seq[(String,String)])
+GET     /clean/history              controllers.SpotifyCleanController.history(id: String)
 GET     /clean/date                 controllers.SpotifyCleanController.date(d: String)
 
 # Map static resources from the /public folder to the /assets URL path
