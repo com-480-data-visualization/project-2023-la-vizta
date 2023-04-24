@@ -15,17 +15,18 @@ const mapOptions = {
     maxZoom: 5,
     maxBoundsViscosity: 1,
     maxBounds: MAP_BOUNDS,
+    style: { height: '100vh', border: undefined },
+    preferCanvas: true 
+
 }
 
 const MapWrapper = ( { children } ) => {
     return (
         <MapContainer 
             {...mapOptions}
-            style={{height: '100vh', border: undefined}}
             // TODO: fractional zooming without weird separation between tiles
             // zoomSnap={0.5}
             // zoomDelta={0.25}
-            preferCanvas={true} 
         >
             <TileLayer
                 className="grayscale-tilelayer"

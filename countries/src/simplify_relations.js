@@ -13,7 +13,7 @@ fs.readFile('relations.json', 'utf8', (err, data) => {
     const d = JSON.parse(data)
     const s_data = d.map( r => {
 		const f = {"type":"Feature", "geometry": r.geometry}
-		return {id: r.id, name: r.en ? r.en : r.ee, feature: simplify(f, tolerance)}
+		return {id: r.id, iso: r.iso, feature: simplify(f, tolerance)}
     } )
 	const json = JSON.stringify(s_data, null, 2);
 	fs.writeFileSync('relations_simplified.json', json);
