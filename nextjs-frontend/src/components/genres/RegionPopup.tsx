@@ -44,12 +44,12 @@ const CTrack = ({ i, track }: { i: number; track: Track }) => {
         <span style={{ color: rankColors[i - 1] }}>{i}.</span> {track.title}
       </h4>
       <div className="flex flex-row">
-        <p className="font-Quicksand ml-1 whitespace-nowrap text-ellipsis">
+        <p className="font-Quicksand ml-1 whitespace-nowrap w-[80%] text-ellipsis">
           {track.artist}
         </p>
         <p
           className="font-Quicksand ml-auto whitespace-nowrap text-ellipsis"
-          style={{ color: rankColors[i - 1] }}
+          style={{ color: paletteGenre[track.genre] }}
         >
           {track.genre}
         </p>
