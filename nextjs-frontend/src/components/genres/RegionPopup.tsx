@@ -1,16 +1,7 @@
-import { paletteGenre } from "~/constants";
-import { Region, Track, GenreName, Color } from "~/types";
 import StreamChart from "./StreamChart";
 
-// const rankColors = [
-//     '#CBAA18',
-//     '#A2A19D',
-//     '#CC7E18',
-//     '#3E9A9D',
-//     '#3E9A9D'
-// ]
-
-const rankColors = ["#FF9D00", "#FF5400", "#B01A2E", "#0A9A9A", "#9A649A"];
+import { GENRE_COLORS, CHART_COLORS } from '~/constants';
+import { Region, Track, GenreName, Color } from "~/types";
 
 interface IRegionPopup {
   region: Region;
@@ -37,11 +28,10 @@ const CGenre = ({ i, genre, color }: ICGenre) => {
 };
 
 const CTrack = ({ i, track }: { i: number; track: Track }) => {
-  console.log(track.genre);
   return (
     <div>
       <h4 className="max-w-md text-lg font-semibold font-Azeret mb-[-5px] whitespace-nowrap text-ellipsis overflow-hidden mt-2">
-        <span style={{ color: rankColors[i - 1] }}>{i}.</span> {track.title}
+        <span style={{ color: CHART_COLORS[i - 1] }}>{i}.</span> {track.title}
       </h4>
       <div className="flex flex-row">
         <p className="font-Quicksand ml-1 whitespace-nowrap w-[80%] text-ellipsis">
@@ -49,7 +39,7 @@ const CTrack = ({ i, track }: { i: number; track: Track }) => {
         </p>
         <p
           className="font-Quicksand ml-auto whitespace-nowrap text-ellipsis"
-          style={{ color: paletteGenre[track.genre] }}
+          style={{ color: GENRE_COLORS[track.genre] }}
         >
           {track.genre}
         </p>
@@ -71,7 +61,7 @@ const RegionPopup = ({ region, topGenres, tracks }: IRegionPopup) => {
             <CTrack key={`track-${j}`} i={j + 1} track={track} />
           ))}
         </div>
-        <StreamChart tracks={tracks} color={rankColors} />
+        <StreamChart tracks={tracks} />
       </div>
     </div>
   );

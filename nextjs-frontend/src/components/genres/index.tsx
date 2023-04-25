@@ -4,13 +4,11 @@ import Country from "./DynamicCountry";
 import RegionPopup from "./RegionPopup";
 
 import useFetch from "~/hooks/useFetch";
-import { paletteGenre } from "~/constants";
+import { GENRE_COLORS } from "~/constants";
 import { Countries } from "~/types";
-import { log } from "console";
 
 export default function Genres() {
-  const { data: regions, isLoading: isRegionsLoading } =
-    useFetch<Countries>("/countries/all");
+  const { data: regions, isLoading: isRegionsLoading } = useFetch<Countries>("/countries/all");
   const { data: genres, isLoading: isGenresLoading } = useFetch("/genres");
 
   const [selectedRegion, setSelectedRegion] = useState(undefined);
@@ -34,7 +32,7 @@ export default function Genres() {
         const tracks = genres.tracksPerRegion[name] || [];
         const topGenres = genres.topGenresPerRegion[name] || [];
         const topGenre = topGenres && topGenres[0];
-        const color = paletteGenre[topGenre] || "white";
+        const color = GENRE_COLORS[topGenre] || "white";
 
         return (
           <Country

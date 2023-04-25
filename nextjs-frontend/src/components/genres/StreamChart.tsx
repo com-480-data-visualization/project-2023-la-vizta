@@ -10,7 +10,10 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+
 import { Track } from "~/types";
+import { CHART_COLORS, CHART_OPTIONS } from '~/constants';
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -21,11 +24,6 @@ ChartJS.register(
   Legend
 );
 
-// make sure parent container have a defined height when using
-// responsive component, otherwise height will be 0 and
-// no chart will be rendered.
-// website examples showcase many properties,
-// you'll often use just a few of the
 
 const labels = ["January", "February", "March", "April", "May", "June", "July"];
 
@@ -39,36 +37,22 @@ streamPerTrackPerDate = [
 
 */
 
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: "top" as const,
-    },
-    title: {
-      display: true,
-      text: "Chart.js Line Chart",
-    },
-  },
-};
 
-export const StreamChart = ({
-  tracks,
-  color,
-}: {
-  tracks: Track[];
-  color: string[];
-}) => {
+
+interface IStreamChart {
+    tracks: Track[];
+}
+
+export const StreamChart = ( { tracks }: IStreamChart ) => {
   console.log(tracks);
-  console.log(color[0]);
 
   let dataset = [];
   for (let i = 0; i < tracks.length; i++) {
     dataset.push({
       label: tracks[i].title,
       data: [65 + i, 59 + i, 80 + i, 81 + i, 56 + i, 55 + i, 40 - i],
-      borderColor: color[i],
-      backgroundColor: color[i],
+      borderColor: CHART_COLORS[i],
+      backgroundColor: CHART_COLORS[i],
     });
   }
 
@@ -77,6 +61,6 @@ export const StreamChart = ({
     datasets: dataset,
   };
 
-  return <Line options={options} data={data} />;
+  return <Line options={CHART_OPTIONS} data={data} />;
 };
 export default StreamChart;
