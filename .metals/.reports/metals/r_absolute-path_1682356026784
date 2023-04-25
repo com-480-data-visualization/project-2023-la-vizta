@@ -1,4 +1,0 @@
-Uri: git:/c%3A/Users/edoul/Documents/Master/DataViz/Project/project-2023-la-vizta/play-scala-seed/app/models/table/TracksTable.scala?%7B%22path%22%3A%22c%3A%5C%5CUsers%5C%5Cedoul%5C%5CDocuments%5C%5CMaster%5C%5CDataViz%5C%5CProject%5C%5Cproject-2023-la-vizta%5C%5Cplay-scala-seed%5C%5Capp%5C%5Cmodels%5C%5Ctable%5C%5CTracksTable.scala%22%2C%22ref%22%3A%22%22%7D
-
-Error message: Provider "git" not installed
-Error: java.nio.file.FileSystemNotFoundException: Provider "git" not installed
