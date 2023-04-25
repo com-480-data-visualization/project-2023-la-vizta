@@ -12,6 +12,7 @@ GET     /genres                     controllers.GenresController.getGenres
 GET     /clean/histories            controllers.SpotifyCleanController.histories(region: String, ids: Seq[String])
 GET     /clean/history              controllers.SpotifyCleanController.history(id: String)
 GET     /clean/date                 controllers.SpotifyCleanController.date(d: String)
+GET     /clean/flow                 controllers.SpotifyCleanController.flow(id: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

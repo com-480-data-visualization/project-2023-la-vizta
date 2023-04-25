@@ -1,5 +1,14 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+module.exports = {
+	async redirects() {
+		return [
+			{
+				source: '/',
+				destination: '/genres',
+				permanent: true,
+			},
+		]
+	},
 	reactStrictMode: true,
 	env: {
 		SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
@@ -7,5 +16,3 @@ const nextConfig = {
 		NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
 	},
 }
-
-module.exports = nextConfig

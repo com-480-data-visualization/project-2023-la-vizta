@@ -1,5 +1,11 @@
 import { paletteGenre } from "~/constants";
 
+export interface Route {
+	getProps: () => any
+    MapComponent: any;
+    OverlayComponent: any
+}
+
 export type Geometry = string;
 export type RegionGeometry = [Region, Geometry];
 
@@ -11,13 +17,13 @@ export type Streams = number;
 export type Rank = number;
 export type GenreName = string;
 export interface Track {
-  id: GenreId;
-  title: Title;
-  artist: Artist;
-  region: Region;
-  streams: Streams;
-  rank: Rank;
-  genre: GenreName;
+    id: GenreId;
+    title: Title;
+    artist: Artist;
+    region: Region;
+    streams: Streams;
+    rank: Rank;
+    genre: GenreName;
 }
 export type Color = string;
 

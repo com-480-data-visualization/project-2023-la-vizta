@@ -22,6 +22,17 @@ class SpotifyCleanDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConf
         SpotifyClean(r.<<, r.<<, r.<<, r.<<, r.<<)
     )
     
+    def flow(id: TrackId): Future[Seq[(Region, Date, Rank, Streams)]] = {
+        db run {
+            sql"""
+                select "region", DATE_TRUNC('week', "date"), avg("rank")::INTEGER as "rank", sum("streams") as "streams"
+                from spotify_clean
+                where "id" = $id
+                group by DATE_TRUNC('week', "date"), "region"
+            """.as[(Region, Date, Rank, Streams)]
+        }
+    }
+    
     def history(id: TrackId): Future[Seq[(Region, Date, Rank, Streams)]] = {
         db run {
             val q = for {

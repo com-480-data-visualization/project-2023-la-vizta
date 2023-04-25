@@ -24,6 +24,18 @@ class SpotifyCleanController @Inject()(val dbConfigProvider: DatabaseConfigProvi
         (JsPath \ "streams").write[Streams]
     ) (unlift(SpotifyClean.unapply))
     
+    def flow(id: TrackId): Action[AnyContent] = Action.async({
+        dao.flow(id).map(r => {
+            val r_ = r
+                .groupBy(_._2)
+                .view.mapValues( date => date
+                    .groupBy(_._1)
+                    .view.mapValues(regions => (regions.head._3, regions.head._4) )
+                )
+            Ok(Json.toJson(r_))
+        })
+    })
+    
     def history(id: TrackId): Action[AnyContent] = Action.async({
         dao.history(id).map(r => {
             val r_ = r.sortBy(_._2)

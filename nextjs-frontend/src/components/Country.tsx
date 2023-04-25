@@ -21,7 +21,7 @@ export default function Country( {color, geom, onClick}: IRegion )
 
     const _onClick = ( { latlng }: any ) => {
         onClick()
-        map.flyTo(latlng, map._zoom, {duration: 0.5, noMoveStart: false})
+        map.flyTo(latlng, map._zoom, {animate: true, duration: 0.75})
     }
 
     const onEachFeature = (feature, layer) => {

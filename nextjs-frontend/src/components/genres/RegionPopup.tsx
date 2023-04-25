@@ -49,22 +49,21 @@ const CTrack = ({ i, track }: { i: number; track: Track }) => {
 };
 
 const RegionPopup = ({ region, topGenres, tracks }: IRegionPopup) => {
-  return (
-    <div className="absolute left-1 p-4 z-[9000] rounded backdrop-blur bg-[color:var(--white)]">
-      <div className="m-auto max-w-min whitespace-nowrap font-Playfair text-2xl">
-        {region}
-      </div>
-      <div className="m-auto w-14 border-t-2 border-black mt-1 mb-3"></div>
-      <div className="flex text-base font-Jetbrains">
-        <div className="flex flex-col pr-6 text-base font-Jetbrains">
-          {tracks.map((track, j) => (
-            <CTrack key={`track-${j}`} i={j + 1} track={track} />
-          ))}
-        </div>
-        <StreamChart tracks={tracks} />
-      </div>
-    </div>
-  );
+	return (
+		<div className="absolute flex left-10 top-24 px-6 py-4 z-[9000] rounded backdrop-blur bg-[color:var(--white)]">
+			<div>
+				<div className="font-Playfair text-3xl mb-5 underline underline-offset-[10px]">
+					{region}
+				</div>
+				<div className="flex flex-col text-base font-Jetbrains">
+					{tracks.map((track, j) => (
+						<CTrack key={`track-${j}`} i={j + 1} track={track} />
+					))}
+				</div>
+			</div>
+			<StreamChart tracks={tracks} />
+		</div>
+	);
 };
 
 export default RegionPopup;

@@ -1,5 +1,7 @@
-import { Color, GenreName } from "./types";
+import Genres from '~/components/genres';
+import Flow from '~/components/flow';
 
+import { Color, GenreName } from "~/types";
 
 export const GENRE_COLORS: {[genre: GenreName]: Color} = {
     'Alternative': '#f55dd4ff', // --purple-pizzazz: #f55dd4ff;
