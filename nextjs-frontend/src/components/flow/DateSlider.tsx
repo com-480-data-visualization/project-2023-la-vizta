@@ -32,27 +32,50 @@ interface IDateSlider {
 	onChange: (v: number) => void
 }
 
-export default function DateSlider( { dates, onChange }: IDateSlider ) {
+const delay = 50
 
-	const [a, b] = useState(0)
+function Label( { selected, date }: any ) {
+	return (
+		<p className={`text-xs rotate-45 translate-x-2 translate-y-1 font-JetBrains ${selected && 'font-bold'}`}>
+			{date.split(' ')[0].replace('2021-', '')}
+		</p>
+	)
+}
 
-    const marks = dates.map( (d, i) => ({
-		value: i * (100 / (dates.length - 1)),
-		label: <p className={`text-xs rotate-45 translate-x-2 translate-y-1 font-JetBrains ${a == i && 'font-bold'}`}>{d.split(' ')[0].replace('2021-', '')}</p>
+export default function DateSlider( { isPlaying, dates, onChange }: IDateSlider ) {
+
+	const [currentTime, setCurrentTime] = useState(0)
+
+	const indexToLabel = (i: number) => i * (100 / (dates.length - 1))
+	const labelToIndex = (d: number) => Math.round(d * (dates.length - 1) / 100)
+
+    const marks = dates.map( (date, i) => ({
+		value: indexToLabel(i),
+		label: <Label selected={currentTime == i} date={date} />
 	})) 
 
-	const _onChange = (event: Event, newValue: number | number[]) => {
-		const v = Math.round(newValue * (dates.length - 1) / 100)
-		b(v)
+	const _onChange = (event: Event, newValue: number) => {
+		const v = labelToIndex(newValue)
+		console.log(newValue, v);
+		setCurrentTime(v) // TODO: round
 		onChange(v)
 	};
+
+	useEffect( () => {
+		const interval = setInterval( () => {
+			setCurrentTime( t => t + 1 )
+		}, [delay] )
+		return () => clearInterval(interval)
+	}, [isPlaying] )
     
     return (
         <Box sx={{ width: 1000 }}>
             <IOSSlider
+				// TODO: set disabled?
                 aria-label="Restricted values"
                 defaultValue={0}
-                step={null}
+				value={isPlaying ? currentTime : undefined } // TODO: fix this?
+                step={isPlaying ? 1 : null}
                 marks={marks}
 				onChange={_onChange}
             />
