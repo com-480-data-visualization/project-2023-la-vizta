@@ -6,6 +6,12 @@ export interface Route {
     OverlayComponent: any
 }
 
+export interface DropdownOption {
+    id: string;
+    title: string;
+    desc: string;
+}
+
 export type Geometry = string;
 export type RegionGeometry = [Region, Geometry];
 

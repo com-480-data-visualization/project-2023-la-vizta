@@ -1,15 +1,15 @@
 package controllers
 
-import models.{SpotifyCharts, SpotifyClean}
+import models.SpotifyClean
 import models.Types._
-import models.dao.{SpotifyChartsDAOImpl, SpotifyCleanDAO, SpotifyCleanDAOImpl}
+import models.dao.{SpotifyCleanDAO, SpotifyCleanDAOImpl}
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
 import play.api.libs.json.{JsPath, Json, Writes}
 import play.api.mvc._
 
 import javax.inject._
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class SpotifyCleanController @Inject()(val dbConfigProvider: DatabaseConfigProvider, val controllerComponents: ControllerComponents)(implicit ec: ExecutionContext) extends BaseController {
@@ -24,8 +24,8 @@ class SpotifyCleanController @Inject()(val dbConfigProvider: DatabaseConfigProvi
         (JsPath \ "streams").write[Streams]
     ) (unlift(SpotifyClean.unapply))
     
-    def flow(id: TrackId): Action[AnyContent] = Action.async({
-        dao.flow(id).map(r => {
+    def track(id: TrackId): Action[AnyContent] = Action.async({
+        dao.flowTrack(id).map(r => {
             val r_ = r
                 .groupBy(_._2)
                 .view.mapValues( date => date
@@ -33,6 +33,12 @@ class SpotifyCleanController @Inject()(val dbConfigProvider: DatabaseConfigProvi
                     .view.mapValues(regions => (regions.head._3, regions.head._4) )
                 )
             Ok(Json.toJson(r_))
+        })
+    })
+    
+    def tracks(): Action[AnyContent] = Action.async({
+        dao.flowTracks().map(r => {
+            Ok(Json.toJson(r))
         })
     })
     

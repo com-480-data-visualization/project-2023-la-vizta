@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useRouter } from 'next/router';
 import { FiPlay, FiPause } from 'react-icons/fi'
 import Color from 'color'
 
@@ -6,8 +7,9 @@ import Country from '~/components/Country';
 import DateSlider from './DateSlider';
 import Map from '~/components/Map';
 import Navbar from '../nav/index';
+import Dropdown from '../nav/Dropdown';
 
-import { Countries, Route } from '~/types';
+import { Countries, Route, DropdownOption } from '~/types';
 import useFetch from '~/hooks/useFetch';
 
 
@@ -23,9 +25,10 @@ function MapComponent( { regions, flow, date }: any ) {
 
     const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a;
 
-    // TODO: don't filter but set rank to 50 if name not in flowsAtDate
+    console.log(date, dates, prevFlowsAtDate, nextFlowsAtDate);
+    
 
-    return regions
+    return prevFlowsAtDate && nextFlowsAtDate && regions
         .filter( ([name, ..._]) => name in prevFlowsAtDate && name in nextFlowsAtDate )
         .map( (region, i) => {
             const name = region[0];
@@ -62,9 +65,44 @@ function OverlayComponent( { isPlaying, togglePlaying, flow, onChange }: any ) {
     )
 }
 
+const routes: DropdownOption[] = [
+    { id: '/genres', title: 'Genres', desc: 'Most listened genres per country' },
+    { id: '/flow',   title: 'Flow',   desc: 'Flow graph of a given track' },
+]
+
+function NavComponent() {
+    const router = useRouter();
+    const { data, isLoading } = useFetch(`/flow/tracks`);
+
+    if ( isLoading ) return null
+
+    const routes = data.map( d => ({ id: d[2], title: d[0], desc: d[1] }) )
+
+    const onChange = ( { id }: DropdownOption) => {
+        router.replace( {
+            query: { ...router.query, id },
+        } );
+    }
+
+    return (
+        <Dropdown 
+            defaultRoute={routes[0]} 
+            routes={routes} 
+            anchor='right'
+            onChange={onChange} />
+    )
+}
+
+// 1. 5PjdY0CKGZdEuoNab3yDmX
+// 2. 0gplL1WMoJ6iYaPgMCL0gX
+
 export default function Flow() {
+
+    const { query } = useRouter()
+    const { id } = query 
+    
     const { data: regions, isLoading: isRegionsLoading } = useFetch<Countries>("/countries/all");
-	const { data: flow, isLoading: isFlowLoading } = useFetch("/clean/flow?id=5PjdY0CKGZdEuoNab3yDmX");
+	const { data: unorderedFlow, isLoading: isFlowLoading } = useFetch(`/flow/track?id=${id}`);
 
     const [date, setDate] = useState<number>(0)
     const [isPlaying, setIsPlaying] = useState<boolean>(false)
@@ -72,13 +110,20 @@ export default function Flow() {
     const togglePlaying = () => setIsPlaying( prev => !prev )
     
     const loaded = !isRegionsLoading && !isFlowLoading
+
+    const flow = useMemo( () => !isFlowLoading && 
+        Object.keys(unorderedFlow).sort().reduce( (acc, k) => { 
+            acc[k] = unorderedFlow[k]; 
+            return acc;
+        }, {} )
+    , [unorderedFlow] ) 
 	
     return (
         <>
 		<Map>
 			{ loaded && <MapComponent isPlaying={isPlaying} regions={regions} flow={flow} date={date} /> }
 		</Map>
-		<Navbar />
+		<Navbar NavComponent={NavComponent} />
         { loaded && <OverlayComponent isPlaying={isPlaying} togglePlaying={togglePlaying} flow={flow} onChange={setDate} /> }
 		</>
     )

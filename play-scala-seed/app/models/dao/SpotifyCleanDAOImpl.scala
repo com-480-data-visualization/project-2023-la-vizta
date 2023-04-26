@@ -5,7 +5,7 @@ import models.Types._
 import models.table.{SpotifyCleanTable, TracksTable}
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.PostgresProfile.api._
-import slick.jdbc.{GetResult, JdbcProfile, SetParameter}
+import slick.jdbc.{GetResult, JdbcProfile}
 import slick.lifted.TableQuery
 
 import javax.inject.Inject
@@ -22,21 +22,33 @@ class SpotifyCleanDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConf
         SpotifyClean(r.<<, r.<<, r.<<, r.<<, r.<<)
     )
     
-    def flow(id: TrackId): Future[Seq[(Region, Date, Rank, Streams)]] = {
+    def flowTrack(id: TrackId): Future[Seq[(Region, Date, Rank, Streams)]] = {
         db run {
             sql"""
-                select "region", DATE_TRUNC('week', "date"), avg("rank")::INTEGER as "rank", sum("streams") as "streams"
-                from spotify_clean
-                where "id" = $id
-                group by DATE_TRUNC('week', "date"), "region"
+                SELECT "region", DATE_TRUNC('week', "date"), AVG("rank")::INTEGER as "rank", sum("streams") as "streams"
+                FROM spotify_clean
+                WHERE "id" = $id
+                GROUP BY DATE_TRUNC('week', "date"), "region"
+				ORDER BY DATE_TRUNC('week', "date")
             """.as[(Region, Date, Rank, Streams)]
         }
     }
     
+    def flowTracks(): Future[Seq[(Title, Artist, TrackId)]] =
+        db run {
+            sql"""
+                SELECT title, artist, s."id"
+                FROM (public.spotify_clean as s join tracks as t on s.id = t.id)
+                GROUP BY title, artist, s."id"
+                ORDER BY count(DISTINCT "region")  desc
+                LIMIT 10
+			""".as[(Title, Artist, TrackId)]
+        }
+    
     def history(id: TrackId): Future[Seq[(Region, Date, Rank, Streams)]] = {
         db run {
             val q = for {
-                s <- spotify;
+                s <- spotify
                 if s.id === id
             } yield (s.region, s.date, s.rank, s.streams)
             q.result
@@ -57,7 +69,7 @@ class SpotifyCleanDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConf
         db run {
             val q = for (
                 s <- spotify
-                if ( s.region === region && s.id.inSetBind(ids)  )
+                if s.region === region && s.id.inSetBind(ids)
             ) yield s
             q.result
         }
@@ -68,7 +80,7 @@ class SpotifyCleanDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConf
             val q = for {
                 s <- spotify; t <- tracks
                 if s.id === t.id && s.date === d
-            } yield (s.id, t.title, t.artist, s.region, s.rank, s.streams);
+            } yield (s.id, t.title, t.artist, s.region, s.rank, s.streams)
             q.result
         }
 }

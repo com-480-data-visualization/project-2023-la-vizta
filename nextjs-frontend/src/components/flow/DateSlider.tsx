@@ -1,7 +1,8 @@
+import { useState, useEffect } from 'react';
+
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import { styled } from '@mui/material/styles';
-import { useState } from 'react';
 
 const iOSBoxShadow = '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)';
 
@@ -51,31 +52,38 @@ export default function DateSlider( { isPlaying, dates, onChange }: IDateSlider 
 
     const marks = dates.map( (date, i) => ({
 		value: indexToLabel(i),
-		label: <Label selected={currentTime == i} date={date} />
+		label: <Label selected={Math.round(currentTime) == i} date={date} />
 	})) 
 
 	const _onChange = (event: Event, newValue: number) => {
 		const v = labelToIndex(newValue)
-		console.log(newValue, v);
-		setCurrentTime(v) // TODO: round
-		onChange(v)
+		setCurrentTime(v)
 	};
 
 	useEffect( () => {
+		if ( !isPlaying ) return;
 		const interval = setInterval( () => {
-			setCurrentTime( t => t + 1 )
+			setCurrentTime( t => (t + 0.05) % (dates.length - 1) )
 		}, [delay] )
 		return () => clearInterval(interval)
 	}, [isPlaying] )
+
+	useEffect( () => {
+		onChange(currentTime)
+	}, [currentTime] )
     
     return (
-        <Box sx={{ width: 1000 }}>
+        <Box sx={{ width: '94%', marginRight: '1rem' }}>
             <IOSSlider
-				// TODO: set disabled?
+				slotProps={{
+					thumb: {
+						className: 'transition-all shadow',
+					},
+				}}
                 aria-label="Restricted values"
                 defaultValue={0}
-				value={isPlaying ? currentTime : undefined } // TODO: fix this?
-                step={isPlaying ? 1 : null}
+				value={indexToLabel(currentTime)}
+                step={null}
                 marks={marks}
 				onChange={_onChange}
             />

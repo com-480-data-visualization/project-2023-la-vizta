@@ -3,45 +3,51 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router'
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi'
 
-interface Route {
-    name: string;
-    req: string;
-    desc: string;
+import { DropdownOption } from '~/types'
+
+
+interface IDropdown {
+    defaultRoute: DropdownOption
+    routes: DropdownOption[]
+    anchor: 'left' | 'center' | 'right'
+    onChange?: (route: DropdownOption) => void
 }
 
-const routes: Route[] = [
-    { name: 'Genres', req: '/genres', desc: 'Most listened genres per country' },
-    { name: 'Flow',   req: '/flow',   desc: 'Flow graph of a given track' },
-]
+const translate = {
+    'left' : '0%', 
+    'center': '-50%',
+    'right': '-100%'
+}
 
-export default function Dropdown() 
+
+export default function Dropdown( { defaultRoute, routes, anchor, onChange }: IDropdown ) 
 {
-    const [selected, setSelected] = useState<Route>(routes[0])
+    const [selected, setSelected] = useState<DropdownOption>(defaultRoute)
     const [show, setShow] = useState<boolean>(false)
-    const router = useRouter()
+    
+    const toggleSelected = () => setShow( prev => !prev )
 
-    useEffect( () => {
-        setSelected( routes.find( r => r.req == router.asPath ) )
-    }, [router] )
-
-
-    const onSelectedClick = () => {
-        setShow( prev => !prev )
+    const onClick = (route: DropdownOption) => () => {
+        toggleSelected()
+        setSelected( route )
+        onChange && onChange( selected )
     }
 
+    const x = translate[anchor]
+    
     return (
         <div className="relative">
-            <div className="absolute justify-start flex flex-col rounded px-5 py-2 text-xl hover:bg-[#FFFFFFCC]  translate-y-[-22px] transition-colors">
-                <div className="font-Azeret cursor-pointer flex items-center gap-2" onClick={onSelectedClick}>
-                    { selected.name } 
+            <div style={{ transform: `translate(${x}, -18px)` }} className='absolute justify-start flex flex-col rounded px-5 py-1 text-xl hover:bg-[#FFFFFFCC] transition-colors'>
+                <div className="font-Azeret cursor-pointer flex items-center gap-2 whitespace-nowrap" onClick={toggleSelected}>
+                    { selected.title } 
                     <div className="font-Open-Sans text-gray-900 text-sm truncate mt-1 mx-2">{ selected.desc }</div>
-                    {show ? <FiChevronUp /> : <FiChevronDown />}
+                    {show ? <FiChevronUp className='ml-auto' /> : <FiChevronDown className='ml-auto' />}
                 </div>
-                { show && routes.map( prop => 
-                    prop.req === selected.req ? null : 
-                        <div onClick={() => router.push(prop.req)} className="font-Azeret flex flex-col mt-1 cursor-pointer rounded px-2 py-1 hover:bg-[#FFFFFFFF] transition-colors" key={`prop-${prop.name}`}>
-                            {prop.name}
-                            <div className="font-Open-Sans text-gray-900 text-sm truncate">{prop.desc}</div>
+                { show && routes.map( route => 
+                    route.id === selected.id ? null : 
+                        <div onClick={onClick(route)} className="font-Azeret flex flex-col mt-1 cursor-pointer rounded px-2 py-1 hover:bg-[#FFFFFFFF] whitespace-nowrap transition-colors" key={`prop-${route.id}`}>
+                            {route.title}
+                            <div className="font-Open-Sans text-gray-900 text-sm truncate">{route.desc}</div>
                         </div>
                 ) }
             </div>

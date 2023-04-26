@@ -41,28 +41,6 @@ class SpotifyChartsDAOImpl @Inject()(protected val dbConfigProvider: DatabaseCon
             .result.head
         }
 
-//    implicit val shape: Shape[
-//        FlatShapeLevel,
-//        (Rep[Region], Query[
-//            (Rep[Title], Rep[Artist], Rep[Url], Rep[Streams], Rep[Geometry]),
-//            (Title, Artist, Url, Streams, Geometry),
-//            Seq]
-//        ),
-//        (Region, (Title, Artist, Url, Streams, Geometry)),
-//        (SpotifyChartsTable, CountryTable)
-//    ] = ???
-
-    def test(): Future[Seq[Any]] =
-        db run {
-            ???
-//            charts
-//                .filter(t => t.chart === "top200" && t.region =!= "Global")
-//                .sortBy(_.streams.reverse)
-//                .groupBy(_.region)
-//                .flatMap { case (region, group) => region -> group.take(5).result }
-//                .result
-        }
-
     def getMostStreamedPerCountry: Future[Vector[(Region, Title, Date, Url, Streams)]] =
         db run {
             sql"""
