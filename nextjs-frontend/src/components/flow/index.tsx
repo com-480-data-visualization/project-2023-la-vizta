@@ -25,9 +25,6 @@ function MapComponent( { regions, flow, date }: any ) {
 
     const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a;
 
-    console.log(date, dates, prevFlowsAtDate, nextFlowsAtDate);
-    
-
     return prevFlowsAtDate && nextFlowsAtDate && regions
         .filter( ([name, ..._]) => name in prevFlowsAtDate && name in nextFlowsAtDate )
         .map( (region, i) => {
