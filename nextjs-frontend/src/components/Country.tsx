@@ -3,8 +3,6 @@ import { GeoJSON, useMap } from 'react-leaflet';
 import Color from 'color'
 
 import { GenreName, Track } from '~/types';
-import { paletteGenre } from '~/constants';
-import { log } from 'console';
 
 interface IRegion {
     color: string;
@@ -21,23 +19,25 @@ export default function Country( {color, geom, onClick}: IRegion )
 
     const _onClick = ( { latlng }: any ) => {
         onClick()
-        map.flyTo(latlng, map._zoom, {animate: true, duration: 0.75})
+        map.flyTo(latlng, (map as any)._zoom, {animate: true, duration: 0.75})
     }
 
-    const onEachFeature = (feature, layer) => {
-        layer.on('mouseover', function(e){
+    const onEachFeature = (feature: any, layer: any) => {
+        layer.on('mouseover', function(e: any){
             layer.setStyle( { ...layer.options.style, fillColor: highlight(color), color: darken(color) } )
         });
-        layer.on('mouseout', function(e){
+        layer.on('mouseout', function(e: any) {
             layer.setStyle( { ...layer.options.style, fillColor: color, color } )
         });
     }
 
+    const AnyGeoJSON: any = GeoJSON as any;
+
     return (
-        <GeoJSON 
-            style={{fillColor: color, color, weight: 1}} 
+        <AnyGeoJSON 
+            style={{fillColor: color, color, weight: 1} as any} 
             onEachFeature={onEachFeature}
-            data={JSON.parse(geom)} 
+	    data={JSON.parse(geom)} 
             eventHandlers={{click: _onClick}} />
     )
 }

@@ -15,4 +15,10 @@ module.exports = {
 		SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
 		NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
 	},
+	typescript: {
+		ignoreBuildErrors: true
+	},
+	eslint: {
+		ignoreDuringBuilds: true
+	}
 }

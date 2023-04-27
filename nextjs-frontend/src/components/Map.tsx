@@ -17,22 +17,21 @@ const mapOptions = {
     maxBounds: MAP_BOUNDS,
     style: { height: '100vh', border: undefined },
     preferCanvas: true 
-
 }
 
-const MapWrapper = ( { children } ) => {
+// TODO: fractional zooming without weird separation between tiles
+// zoomSnap={0.5}
+// zoomDelta={0.25}
+
+
+const MapWrapper = ( { children }: any ) => {
     return (
-        <MapContainer 
-            {...mapOptions}
-            // TODO: fractional zooming without weird separation between tiles
-            // zoomSnap={0.5}
-            // zoomDelta={0.25}
-        >
+        <MapContainer {...mapOptions}>
             <TileLayer
                 className="grayscale-tilelayer"
                 minZoom={1}
                 maxZoom={5}
-                zoomSnap={0.1}
+                // zoomSnap={0.1}
                 // TODO: thunderforest tilelayer
                 // subdomains='abcd'
                 url='https://stamen-tiles-{s}.a.ssl.fastly.net/terrain-background/{z}/{x}/{y}{r}.png'

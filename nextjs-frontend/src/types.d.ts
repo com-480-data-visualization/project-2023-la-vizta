@@ -36,9 +36,6 @@ export type Color = string;
 export type TracksPerRegion = { [region: Region]: Track[] };
 export type TopGenresPerRegion = { [region: Region]: GenreName[] };
 
-export type TracksPerRegion = { [region: Region]: Track[] };
-export type TopGenresPerRegion = { [region: Region]: GenreName[] };
-
 // countries
 export type ISO = string;
 export type Lat = number;

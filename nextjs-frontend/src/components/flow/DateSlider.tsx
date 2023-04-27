@@ -29,6 +29,7 @@ const IOSSlider = styled(Slider)(({ theme }) => ({
 }));
 
 interface IDateSlider {
+	isPlaying: boolean;
 	dates: string[];
 	onChange: (v: number) => void
 }
@@ -55,7 +56,7 @@ export default function DateSlider( { isPlaying, dates, onChange }: IDateSlider 
 		label: <Label selected={Math.round(currentTime) == i} date={date} />
 	})) 
 
-	const _onChange = (event: Event, newValue: number) => {
+	const _onChange = (event: Event, newValue: any) => {
 		const v = labelToIndex(newValue)
 		setCurrentTime(v)
 	};
@@ -64,7 +65,7 @@ export default function DateSlider( { isPlaying, dates, onChange }: IDateSlider 
 		if ( !isPlaying ) return;
 		const interval = setInterval( () => {
 			setCurrentTime( t => (t + 0.05) % (dates.length - 1) )
-		}, [delay] )
+		}, delay )
 		return () => clearInterval(interval)
 	}, [isPlaying] )
 

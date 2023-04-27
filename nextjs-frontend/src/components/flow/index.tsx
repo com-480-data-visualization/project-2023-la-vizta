@@ -18,16 +18,16 @@ const maxRank = 50; // Depends on spotify_clean table
 function MapComponent( { regions, flow, date }: any ) {
    
     const dates = Object.values(flow)
-    const prevFlowsAtDate = dates[Math.floor(date)]
-    const nextFlowsAtDate = dates[Math.ceil(date)]
+    const prevFlowsAtDate: any = dates[Math.floor(date)]
+    const nextFlowsAtDate: any = dates[Math.ceil(date)]
 
     const decimalDate = date - Math.floor(date)
 
     const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a;
 
     return prevFlowsAtDate && nextFlowsAtDate && regions
-        .filter( ([name, ..._]) => name in prevFlowsAtDate && name in nextFlowsAtDate )
-        .map( (region, i) => {
+        .filter( ([name, ..._]: any) => name in prevFlowsAtDate && name in nextFlowsAtDate )
+        .map( (region: any, i: number) => {
             const name = region[0];
             const geom = region[4];
 
@@ -69,11 +69,11 @@ const routes: DropdownOption[] = [
 
 function NavComponent() {
     const router = useRouter();
-    const { data, isLoading } = useFetch(`/flow/tracks`);
+    const { data, isLoading } = useFetch<any>(`/flow/tracks`);
 
     if ( isLoading ) return null
 
-    const routes = data.map( d => ({ id: d[2], title: d[0], desc: d[1] }) )
+    const routes = data.map( (d: any) => ({ id: d[2], title: d[0], desc: d[1] }) )
 
     const onChange = ( { id }: DropdownOption) => {
         router.replace( {
@@ -99,7 +99,7 @@ export default function Flow() {
     const { id } = query 
     
     const { data: regions, isLoading: isRegionsLoading } = useFetch<Countries>("/countries/all");
-	const { data: unorderedFlow, isLoading: isFlowLoading } = useFetch(`/flow/track?id=${id}`);
+	const { data: unorderedFlow, isLoading: isFlowLoading } = useFetch<any>(`/flow/track?id=${id}`);
 
     const [date, setDate] = useState<number>(0)
     const [isPlaying, setIsPlaying] = useState<boolean>(false)
