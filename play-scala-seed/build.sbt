@@ -1,5 +1,5 @@
 name := """play-scala-seed"""
-organization := "com.example"
+organization := "dataviz-backend.peacefulotter.com"
 
 version := "1.0-SNAPSHOT"
 
@@ -38,3 +38,5 @@ Docker / daemonUser := "daemon"
 dockerExposedPorts := Seq(9000)
 dockerBaseImage := "openjdk:8-jre-alpine"
 dockerUpdateLatest := true
+dockerEntrypoint := Seq("/opt/docker/bin/play-scala-seed", "-Dconfig.resource=production.conf")
+

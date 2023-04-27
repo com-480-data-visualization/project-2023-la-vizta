@@ -1,1 +1,1 @@
-sbt docker:publishLocal
+sbt "Docker / publishLocal"
