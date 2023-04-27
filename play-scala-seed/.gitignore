@@ -8,3 +8,5 @@ target
 /.settings
 /.g8/
 /RUNNING_PID
+/build/
+/conf/production.conf

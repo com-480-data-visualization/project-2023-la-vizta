@@ -3,7 +3,7 @@ organization := "com.example"
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala).settings(
+lazy val root = (project in file(".")).enablePlugins(PlayScala, AshScriptPlugin).settings(
     routesImport += "utils.Binders._"
 )
 
@@ -24,3 +24,17 @@ libraryDependencies ++= Seq(
 
 // Adds additional packages into conf/routes
 // play.sbt.routes.RoutesKeys.routesImport += "com.example.binders._"
+
+import com.typesafe.sbt.packager.docker.DockerChmodType
+import com.typesafe.sbt.packager.docker.DockerPermissionStrategy
+dockerChmodType := DockerChmodType.UserGroupWriteExecute
+dockerPermissionStrategy := DockerPermissionStrategy.CopyChown
+
+Docker / maintainer := "nmaire@peacefulotter.com"
+Docker / packageName := "dataviz-playground-api"
+Docker / version := sys.env.getOrElse("BUILD_NUMBER", "0")
+Docker / daemonUserUid  := None
+Docker / daemonUser := "daemon"
+dockerExposedPorts := Seq(9000)
+dockerBaseImage := "openjdk:8-jre-alpine"
+dockerUpdateLatest := true
