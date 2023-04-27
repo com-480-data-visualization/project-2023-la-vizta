@@ -113,7 +113,7 @@ export default function Flow() {
             acc[k] = unorderedFlow[k]; 
             return acc;
         }, {} )
-    , [unorderedFlow] ) 
+    , [isFlowLoading, unorderedFlow] ) 
 	
     return (
         <>

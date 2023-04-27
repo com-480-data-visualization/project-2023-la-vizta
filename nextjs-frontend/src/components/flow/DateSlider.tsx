@@ -67,7 +67,7 @@ export default function DateSlider( { isPlaying, dates, onChange }: IDateSlider 
 			setCurrentTime( t => (t + 0.05) % (dates.length - 1) )
 		}, delay )
 		return () => clearInterval(interval)
-	}, [isPlaying] )
+	}, [isPlaying, dates.length] )
 
 	useEffect( () => {
 		onChange(currentTime)
