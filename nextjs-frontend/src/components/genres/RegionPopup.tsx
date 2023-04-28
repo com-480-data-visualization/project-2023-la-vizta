@@ -1,21 +1,21 @@
 import StreamChart from "./StreamChart";
 
 import { GENRE_COLORS, CHART_COLORS } from '~/constants';
-import { Region, Track, GenreName, Color } from "~/types";
+import { Region, Track, Genre, Color } from "~/types";
 
 interface IRegionPopup {
-  region: Region;
-  topGenres: GenreName[];
-  tracks: Track[];
+  region: Region
+	topGenres: Genre[]
+	tracks: Track[]
 }
 
-interface ICGenre {
+interface IGenre {
   i: number;
-  genre: string;
+  genre: Genre;
   color: string;
 }
 
-const CGenre = ({ i, genre, color }: ICGenre) => {
+const CGenre = ({ i, genre, color }: IGenre) => {
   const fontGenres = ["xx-large", "x-large", "large", "small", "small"];
   return (
     <p
@@ -27,7 +27,12 @@ const CGenre = ({ i, genre, color }: ICGenre) => {
   );
 };
 
-const CTrack = ({ i, track }: { i: number; track: Track }) => {
+interface ITrack {
+  i: number; 
+  track: Track
+}
+
+const CTrack = ({ i, track }: ITrack) => {
   return (
     <div>
       <h4 className="max-w-md text-lg font-semibold font-Azeret mb-[-5px] whitespace-nowrap text-ellipsis overflow-hidden mt-2">
@@ -48,7 +53,7 @@ const CTrack = ({ i, track }: { i: number; track: Track }) => {
   );
 };
 
-const RegionPopup = ({ region, topGenres, tracks }: IRegionPopup) => {
+const RegionPopup = ( { region, topGenres, tracks }: IRegionPopup ) => {
 	return (
 		<div className="absolute flex left-10 top-24 px-6 py-4 z-[9000] rounded backdrop-blur bg-[color:var(--white)]">
 			<div>

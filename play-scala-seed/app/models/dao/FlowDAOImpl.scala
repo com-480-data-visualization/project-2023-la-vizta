@@ -24,14 +24,14 @@ class FlowDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConfigProvid
         }
     }
     
-    def tracks(): Future[Seq[(Title, Artist, TrackId)]] =
+    def tracks(): Future[Seq[(TrackId, Title, Artist)]] =
         db run {
             sql"""
-				SELECT title, artist, s."id"
+				SELECT s."id", title, artist
 				FROM (public.spotify_clean as s join tracks as t on s.id = t.id)
 				GROUP BY title, artist, s."id"
 				ORDER BY count(DISTINCT "region")  desc
 				LIMIT 10
-			""".as[(Title, Artist, TrackId)]
+			""".as[(TrackId, Title, Artist)]
         }
 }

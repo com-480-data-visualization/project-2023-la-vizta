@@ -30,7 +30,7 @@ export default function Dropdown( { defaultRoute, routes, anchor, onChange }: ID
     const onClick = (route: DropdownOption) => () => {
         toggleSelected()
         setSelected( route )
-        onChange && onChange( selected )
+        onChange && onChange(route)
     }
 
     const x = translate[anchor]

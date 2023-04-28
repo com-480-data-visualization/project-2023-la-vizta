@@ -1,5 +1,3 @@
-import { paletteGenre } from "~/constants";
-
 export interface Route {
 	getProps: () => any
     MapComponent: any;
@@ -13,32 +11,39 @@ export interface DropdownOption {
 }
 
 export type Geometry = string;
-export type RegionGeometry = [Region, Geometry];
 
-export type GenreId = number;
 export type Title = string;
 export type Artist = string;
 export type Region = string;
 export type Streams = number;
 export type Rank = number;
-export type GenreName = string;
-export interface Track {
-    id: GenreId;
+export type Genre = string;
+export interface SmallTrack {
+    id: TrackId;
+    title: Title;
+    artist: Artist;
+}
+export interface Track extends SmallTrack {
+    id: TrackId;
     title: Title;
     artist: Artist;
     region: Region;
     streams: Streams;
     rank: Rank;
-    genre: GenreName;
+    genre: Genre;
 }
-export type Color = string;
 
-export type TracksPerRegion = { [region: Region]: Track[] };
-export type TopGenresPerRegion = { [region: Region]: GenreName[] };
-
-// countries
-export type ISO = string;
 export type Lat = number;
 export type Lng = number;
 export type GeoJSON = string;
-export type Countries = [Region, ISO, Lat, Lng, GeoJSON]; // as received from /countries/all
+
+export interface Country {
+    region: Region,
+    lat: Lat, lng: Lng,
+    geom: GeoJSON
+}
+
+export interface GenresPerRegion {
+    tracksPerRegion: { [region: Region]: Track[] };
+    topGenresPerRegion: { [region: Region]: Genre[] };
+}

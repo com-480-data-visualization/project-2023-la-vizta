@@ -37,30 +37,27 @@ streamPerTrackPerDate = [
 
 */
 
-
-
 interface IStreamChart {
     tracks: Track[];
 }
 
-export const StreamChart = ( { tracks }: IStreamChart ) => {
-  console.log(tracks);
+export default function StreamChart( { tracks }: IStreamChart ) {
+    console.log(tracks);
 
-  let dataset = [];
-  for (let i = 0; i < tracks.length; i++) {
-    dataset.push({
-      label: tracks[i].title,
-      data: [65 + i, 59 + i, 80 + i, 81 + i, 56 + i, 55 + i, 40 - i],
-      borderColor: CHART_COLORS[i],
-      backgroundColor: CHART_COLORS[i],
-    });
-  }
+    let dataset = [];
+    for (let i = 0; i < tracks.length; i++) {
+		dataset.push({
+			label: tracks[i].title,
+			data: [65 + i, 59 + i, 80 + i, 81 + i, 56 + i, 55 + i, 40 - i],
+			borderColor: CHART_COLORS[i],
+			backgroundColor: CHART_COLORS[i],
+		});
+    }
 
-  const data = {
-    labels /* : date streamPerTrackPerDate.map( (element) => element.date) */,
-    datasets: dataset,
-  };
+    const data = {
+		labels /* : date streamPerTrackPerDate.map( (element) => element.date) */,
+		datasets: dataset,
+    };
 
-  return <Line options={CHART_OPTIONS} data={data} />;
+    return <Line options={CHART_OPTIONS} data={data} />;
 };
-export default StreamChart;

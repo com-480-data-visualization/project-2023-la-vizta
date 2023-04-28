@@ -1,19 +1,31 @@
 import { useState } from "react";
 
-import Country from '~/components/Country';
+import LeafletCountry from '~/components/LeafletCountry';
 import RegionPopup from "./RegionPopup";
 import Navbar from '../nav/';
 import Map from '~/components/Map';
 
 import useFetch from "~/hooks/useFetch";
 import { GENRE_COLORS } from "~/constants";
-import { Countries, Route } from "~/types";
+import { Genre, Region, Country, GenresPerRegion, Route } from "~/types";
 
+interface SelectedRegion {
+	region: Region;
+	topGenres: Genre[]
+	tracks: Track[]
+}
 
-function MapComponent( { loaded, regions, genres, setSelectedRegion }: any ) {
+interface IMapComponent {
+	loaded: boolean;
+	regions: Country[];
+	genres: GenresPerRegion;
+	setSelectedRegion: (r: SelectedRegion) => void
+}
+
+function MapComponent( { loaded, regions, genres, setSelectedRegion }: IMapComponent ) {
 
 	const onClick = (i: number) => () => {
-		const [name, _] = regions[i];
+		const { name } = regions[i];
 		setSelectedRegion( {
 			region: name,
 			topGenres: genres.topGenresPerRegion[name],
@@ -23,16 +35,14 @@ function MapComponent( { loaded, regions, genres, setSelectedRegion }: any ) {
 
 	if ( !loaded ) return null
 
-	return regions.map((region, i) => {
-        const name = region[0];
-        const geom = region[4];
+	return regions.map( ({name, geom}, i) => {
         const tracks = genres.tracksPerRegion[name] || [];
         const topGenres = genres.topGenresPerRegion[name] || [];
         const topGenre = topGenres && topGenres[0];
         const color = GENRE_COLORS[topGenre] || "white";
 
         return (
-			<Country
+			<LeafletCountry
 				key={`country-${i}`}
 				color={color}
 				geom={geom}
@@ -42,15 +52,19 @@ function MapComponent( { loaded, regions, genres, setSelectedRegion }: any ) {
 	} )
 }
 
-function OverlayComponent( { selectedRegion }: any ) {
+interface IOverlayComponent {
+	selectedRegion: SelectedRegion
+}
+
+function OverlayComponent( { selectedRegion }: IOverlayComponent ) {
 	return selectedRegion && <RegionPopup {...selectedRegion} />
 }
 
 export default function Genres() {
-	const { data: regions, isLoading: isRegionsLoading } = useFetch<Countries>("/countries/all");
-	const { data: genres, isLoading: isGenresLoading } = useFetch("/genres");
+	const { data: regions, isLoading: isRegionsLoading } = useFetch<Country[]>("/countries/all");
+	const { data: genres, isLoading: isGenresLoading } = useFetch<GenresPerRegion>("/genres");
 
-	const [selectedRegion, setSelectedRegion] = useState(undefined);
+	const [selectedRegion, setSelectedRegion] = useState<SelectedRegion>(undefined);
 
 	const loaded = !isRegionsLoading && !isGenresLoading
 
