@@ -4,16 +4,11 @@
 # ~~~~
 
 # An example controller showing a sample home page
-# GET     /first                      controllers.SpotifyController.get100first
-# GET     /viral                      controllers.SpotifyController.getRecentTopViral50ByCountry
-# GET     /streams                    controllers.SpotifyController.getMostStreamedPerCountry
-GET     /countries/all                controllers.CountriesController.getAll
+GET     /countries/all              controllers.CountriesController.getAll
 GET     /genres                     controllers.GenresController.getGenres
 GET     /clean/histories            controllers.SpotifyCleanController.histories(region: String, ids: Seq[String])
-GET     /clean/history              controllers.SpotifyCleanController.history(id: String)
-GET     /clean/date                 controllers.SpotifyCleanController.date(d: String)
-GET     /flow/tracks                controllers.SpotifyCleanController.tracks
-GET     /flow/track                 controllers.SpotifyCleanController.track(id: String)
+GET     /flow/tracks                controllers.FlowController.tracks
+GET     /flow/track                 controllers.FlowController.track(id: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

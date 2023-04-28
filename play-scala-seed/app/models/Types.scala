@@ -21,7 +21,6 @@ object Types {
 	type Streams = Int
 
 	// From genre
-	type GenreId = Int
 	type Genre = String
 	
 	// From tracks

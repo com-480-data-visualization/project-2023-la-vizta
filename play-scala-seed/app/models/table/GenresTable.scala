@@ -1,18 +1,16 @@
 package models.table
 
 import models.Genres
-import models.Types.{Artist, Genre, GenreId, Rank, Region, Streams, Title}
+import models.Types.{Genre, TrackId, Rank, Region, Streams}
 import slick.jdbc.PostgresProfile.api._
 
 class GenresTable(tag: Tag) extends Table[Genres](_tableTag = tag, _tableName = "genres") {
 
-	def id = column[GenreId]("id", O.PrimaryKey)
-	def title = column[Title]("title")
-	def artist = column[Artist]("artist")
+	def id = column[TrackId]("id")
 	def region = column[Region]("region")
 	def streams = column[Streams]("streams")
-	def rank = column[Rank]("ranking")
+	def rank = column[Rank]("rank")
 	def genre = column[Genre]("genre")
 
-	def * = (id, title, artist, region, streams, rank, genre) <> (Genres.tupled, Genres.unapply)
+	def * = (id, region, streams, rank, genre) <> (Genres.tupled, Genres.unapply)
 }
