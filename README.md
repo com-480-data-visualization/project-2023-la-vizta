@@ -44,7 +44,6 @@ Nevertheless, finding new musics or artists is difficult and the recommendations
 always recommend what we "want" to hear - similar titles as the ones that are already in our playlists. This is were our project comes to life: building an app - a tool - that will allow anyone to discover new genres and new artists in a visual and entertaining manner. 
 
 More concretely, we would like to display a map of the world. Data could be shown as shapes, popups, graphs, colors as well as text. 
-# EDOU -> MORE ON THIS
 The website will consist of a map where each country will have:
 - a color correspoding to the most listened genre 
 - a popup on clickEvent with the top 5 most streamed tracks and a chart to naviguate and see the evolution of their streams over time.
