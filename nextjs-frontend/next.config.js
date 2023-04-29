@@ -17,9 +17,9 @@ module.exports = {
 		NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
 	},
 	typescript: {
-		ignoreBuildErrors: true
+		ignoreBuildErrors: false
 	},
 	eslint: {
-		ignoreDuringBuilds: true
+		ignoreDuringBuilds: false
 	}
 }

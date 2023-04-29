@@ -11,7 +11,7 @@ import Dropdown from '../nav/Dropdown';
 
 import useFetch from '~/hooks/useFetch';
 
-import { Country, Route, DropdownOption, SmallTrack, Region, Rank, Streams } from '~/types';
+import { Country, DropdownOption, SmallTrack, Region, Rank, Streams } from '~/types';
 
 interface RankStreams { rank: Rank, streams: Streams } 
 type FlowPerRegion = { [region: Region]: RankStreams }
@@ -20,12 +20,12 @@ type FlowPerDatePerRegion = { [date: string]: FlowPerRegion }
 const maxRank = 50; // Depends on spotify_clean table
 
 interface IMapComponent {
-    regions: Region[]
+    regions: Country[]
     flow: FlowPerDatePerRegion
-    date: string;
+    date: number;
 }
 
-function MapComponent( { regions, flow, date }: any ) {
+function MapComponent( { regions, flow, date }: IMapComponent ) {
    
     const dates = Object.values(flow)
     const prevFlowsAtDate: FlowPerRegion = dates[Math.floor(date)]
@@ -35,35 +35,40 @@ function MapComponent( { regions, flow, date }: any ) {
 
     const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a;
 
-    return prevFlowsAtDate && nextFlowsAtDate && regions
-        .filter( ( { name } ) => name in prevFlowsAtDate && name in nextFlowsAtDate )
-        .map( ({name, geom}, i: number) => {
-            const { rank: rank1, streams: streams1 } = prevFlowsAtDate[name]
-            const { rank: rank2, streams: streams2 } = nextFlowsAtDate[name]
+    return (
+        <>
+        { prevFlowsAtDate && nextFlowsAtDate && regions
+            .filter( ( { name }: Country ) => name in prevFlowsAtDate && name in nextFlowsAtDate )
+            .map( ( {name, geom}: Country, i: number) => {
+                const { rank: rank1, streams: streams1 } = prevFlowsAtDate[name]
+                const { rank: rank2, streams: streams2 } = nextFlowsAtDate[name]
 
-            const rank = lerp(rank1, rank2, decimalDate)
-            const r = (1 - rank / maxRank) * 255
-            const color = Color.rgb(0, r, 255).string()
-            
-            return (
-                <LeafletCountry
-                    key={`country-${i}`}
-                    color={color}
-                    geom={geom}
-                    onClick={() => {}}
-                />
-            );
-	    } )
+                const rank = lerp(rank1, rank2, decimalDate)
+                const r = (1 - rank / maxRank) * 255
+                const color = Color.rgb(0, r, 255).string()
+                
+                return (
+                    <LeafletCountry
+                        key={`country-${i}`}
+                        color={color}
+                        geom={geom}
+                        onClick={() => {}}
+                    />
+                );
+            } )
+        }
+        </>
+    )
 }
 
 interface IOverlayComponent {
     isPlaying: boolean;
     togglePlaying: () => void;
     flow: FlowPerDatePerRegion
-    onChange: (option: DropdownOption) => void;
+    onChange: (date: number) => void;
 }
 
-function OverlayComponent( { isPlaying, togglePlaying, flow, onChange }: any ) {
+function OverlayComponent( { isPlaying, togglePlaying, flow, onChange }: IOverlayComponent ) {
 
     const dates = Object.keys(flow)
     const Icon = isPlaying ? FiPause : FiPlay
@@ -76,16 +81,11 @@ function OverlayComponent( { isPlaying, togglePlaying, flow, onChange }: any ) {
     )
 }
 
-const routes: DropdownOption[] = [
-    { id: '/genres', title: 'Genres', desc: 'Most listened genres per country' },
-    { id: '/flow',   title: 'Flow',   desc: 'Flow graph of a given track' },
-]
-
 function NavComponent() {
     const router = useRouter();
     const { data, isLoading } = useFetch<SmallTrack[]>(`/flow/tracks`);
     
-    if ( isLoading ) return null
+    if ( isLoading || data === undefined ) return null
 
     const routes = data.map( ({ id, title, artist }: SmallTrack) => ({ id, title, desc: artist }) )
 
@@ -118,19 +118,21 @@ export default function Flow() {
 
     const togglePlaying = () => setIsPlaying( prev => !prev )
     
-    const loaded = !isRegionsLoading && !isFlowLoading
+    const loaded = !isRegionsLoading && !isFlowLoading && regions !== undefined
 
-    const flow: FlowPerDatePerRegion = useMemo( () => !isFlowLoading && 
-        Object.keys(unorderedFlow).sort().reduce( (acc, k) => { 
-            acc[k] = unorderedFlow[k]; 
-            return acc;
-        }, {} as FlowPerDatePerRegion )
+    const flow: FlowPerDatePerRegion = useMemo( () => 
+        (isFlowLoading || unorderedFlow === undefined) 
+            ? {} 
+            :  Object.keys(unorderedFlow).sort().reduce( (acc, k) => { 
+                acc[k] = unorderedFlow[k]; 
+                return acc;
+            }, {} as FlowPerDatePerRegion )
     , [isFlowLoading, unorderedFlow] ) 
 	
     return (
         <>
 		<Map>
-			{ loaded && <MapComponent isPlaying={isPlaying} regions={regions} flow={flow} date={date} /> }
+			{ loaded && <MapComponent regions={regions} flow={flow} date={date} /> }
 		</Map>
 		<Navbar NavComponent={NavComponent} />
         { loaded && <OverlayComponent isPlaying={isPlaying} togglePlaying={togglePlaying} flow={flow} onChange={setDate} /> }

@@ -6,7 +6,7 @@ import { styled } from '@mui/material/styles';
 
 const iOSBoxShadow = '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)';
 
-const IOSSlider = styled(Slider)(({ theme }) => ({
+const IOSSlider = styled(Slider)( () => ({
 	'& .MuiSlider-thumb': {
 		height: 15,
 		width: 15,
@@ -56,10 +56,11 @@ export default function DateSlider( { isPlaying, dates, onChange }: IDateSlider 
 		label: <Label selected={Math.round(currentTime) == i} date={date} />
 	})) 
 
-	const _onChange = (event: Event, newValue: any) => {
+	const _onChange = (_: Event, newValue: number | number[]) => {
+		if (Array.isArray(newValue)) return;
 		const v = labelToIndex(newValue)
 		setCurrentTime(v)
-	};
+	}
 
 	useEffect( () => {
 		if ( !isPlaying ) return;

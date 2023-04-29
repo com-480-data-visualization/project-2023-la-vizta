@@ -33,12 +33,14 @@ export interface Track extends SmallTrack {
     genre: Genre;
 }
 
+export type Color = string;
+
 export type Lat = number;
 export type Lng = number;
 export type GeoJSON = string;
 
 export interface Country {
-    region: Region,
+    name: Region,
     lat: Lat, lng: Lng,
     geom: GeoJSON
 }

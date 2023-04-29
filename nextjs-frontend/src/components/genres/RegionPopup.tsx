@@ -1,7 +1,7 @@
 import StreamChart from "./StreamChart";
 
 import { GENRE_COLORS, CHART_COLORS } from '~/constants';
-import { Region, Track, Genre, Color } from "~/types";
+import { Region, Track, Genre } from "~/types";
 
 interface IRegionPopup {
   region: Region

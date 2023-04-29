@@ -1,6 +1,5 @@
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router'
+import { useState } from 'react';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi'
 
 import { DropdownOption } from '~/types'

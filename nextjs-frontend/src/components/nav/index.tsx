@@ -1,6 +1,5 @@
 
 import { useRouter } from 'next/router';
-import { FaSpotify } from 'react-icons/fa'
 
 import Dropdown from './Dropdown';
 
@@ -11,12 +10,16 @@ const routes: DropdownOption[] = [
     { id: '/flow',   title: 'Flow',   desc: 'Flow graph of a given track' },
 ]
 
-export default function Navbar( { NavComponent }: any ) 
+interface INavbar {
+    NavComponent?: () => JSX.Element | null;
+}
+
+export default function Navbar( { NavComponent }: INavbar ) 
 {
     const router = useRouter()
-    const defaultRoute = routes.find( r => r.id == router.pathname )
+    const defaultRoute = routes.find( r => r.id == router.pathname ) || routes[0]
 
-    const onChange = ( { id }: DropdownOption) => router.push(id)
+    const onChange = ( { id }: DropdownOption ) => router.push(id)
 
     return (
         <div className="absolute flex justify-between items-center cursor-default px-6 py-5 top-2 ml-[50%] translate-x-[-50%] w-10/12 h-12 rounded backdrop-blur bg-[color:var(--white)] z-[9000]">
