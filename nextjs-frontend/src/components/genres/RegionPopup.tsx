@@ -1,4 +1,4 @@
-import StreamChart from "./StreamChart";
+import StreamChart from "./NewStreamChart";
 
 import { GENRE_COLORS, CHART_COLORS } from '~/constants';
 import { Region, Track, Genre } from "~/types";
@@ -33,40 +33,39 @@ interface ITrack {
 }
 
 const CTrack = ({ i, track }: ITrack) => {
-  return (
-    <div>
-      <h4 className="max-w-md text-lg font-semibold font-Azeret mb-[-5px] whitespace-nowrap text-ellipsis overflow-hidden mt-2">
-        <span style={{ color: CHART_COLORS[i - 1] }}>{i}.</span> {track.title}
-      </h4>
-      <div className="flex flex-row">
-        <p className="font-Quicksand ml-1 whitespace-nowrap w-[80%] text-ellipsis">
-          {track.artist}
-        </p>
-        <p
-          className="font-Quicksand ml-auto whitespace-nowrap text-ellipsis"
-          style={{ color: GENRE_COLORS[track.genre] }}
-        >
-          {track.genre}
-        </p>
-      </div>
-    </div>
-  );
+	return (
+		<div className='flex mb-2'>
+			<p className="max-w-md text-xl font-semibold font-Azeret whitespace-nowrap text-ellipsis overflow-hidden mt-1 mr-3 rounded p-1 bg-[#fff5] h-min w-8 text-center" 
+				style={{ color: CHART_COLORS[i - 1] }}>
+				{i}
+			</p>
+			<div>
+				<p className='font-Jetbrains text-lg font-semibold'>{track.title}</p>
+				<p className="font-Quicksand text-md whitespace-nowrap text-ellipsis">
+					{track.artist}
+				</p>
+				<p className="font-Quicksand text-sm whitespace-nowrap text-ellipsis italic">
+					{track.genre}
+				</p>
+			</div>
+		</div>
+	);
 };
 
 const RegionPopup = ( { region, topGenres, tracks }: IRegionPopup ) => {
 	return (
-		<div className="absolute flex left-10 top-24 px-6 py-4 z-[9000] rounded backdrop-blur bg-[color:var(--white)]">
-			<div>
-				<div className="font-Playfair text-3xl mb-5 underline underline-offset-[10px]">
-					{region}
-				</div>
+		<div className="absolute left-10 top-24 px-6 py-4 z-[9000] rounded backdrop-blur bg-[color:var(--white)]">
+			<div className="font-Playfair text-3xl mb-7 underline underline-offset-[10px]">
+				{region}
+			</div>
+			<div className='flex'>
 				<div className="flex flex-col text-base font-Jetbrains">
 					{tracks.map((track, j) => (
 						<CTrack key={`track-${j}`} i={j + 1} track={track} />
 					))}
 				</div>
+				<StreamChart region={region} tracks={tracks} />
 			</div>
-			<StreamChart tracks={tracks} />
 		</div>
 	);
 };

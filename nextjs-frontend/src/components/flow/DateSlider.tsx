@@ -24,7 +24,7 @@ const IOSSlider = styled(Slider)( () => ({
 		backgroundColor: '#bfbfbf',
 	},
 	'& .MuiSlider-track': {
-		color: '#77f'
+		color: '#47F'
 	},
 }));
 

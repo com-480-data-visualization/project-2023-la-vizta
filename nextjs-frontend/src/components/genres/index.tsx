@@ -71,11 +71,14 @@ function OverlayComponent( { selectedRegion }: IOverlayComponent ) {
 
 export default function Genres() {
 	const { data: regions, isLoading: isRegionsLoading } = useFetch<Country[]>("/countries/all");
-	const { data: genres, isLoading: isGenresLoading } = useFetch<GenresPerRegion>("/genres");
+	const { data: genres, isLoading: isGenresLoading } = useFetch<GenresPerRegion>("/genres");	
 
 	const [selectedRegion, setSelectedRegion] = useState<SelectedRegion | undefined>(undefined);
 
 	const loaded = !isRegionsLoading && !isGenresLoading
+
+	console.log(genres, selectedRegion);
+
 
 	return (
 		<>
