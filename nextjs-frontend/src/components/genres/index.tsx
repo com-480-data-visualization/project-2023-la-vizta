@@ -63,10 +63,11 @@ function MapComponent( { loaded, regions, genres, setSelectedRegion }: IMapCompo
 
 interface IOverlayComponent {
 	selectedRegion: SelectedRegion | undefined
+	closePopup: () => void
 }
 
-function OverlayComponent( { selectedRegion }: IOverlayComponent ) {
-	return selectedRegion ? <RegionPopup {...selectedRegion} /> : null
+function OverlayComponent( { selectedRegion, closePopup }: IOverlayComponent ) {
+	return selectedRegion ? <RegionPopup {...selectedRegion} closePopup={closePopup} /> : null
 }
 
 export default function Genres() {
@@ -75,18 +76,21 @@ export default function Genres() {
 
 	const [selectedRegion, setSelectedRegion] = useState<SelectedRegion | undefined>(undefined);
 
+	const closePopup = () => setSelectedRegion(undefined)
+
 	const loaded = !isRegionsLoading && !isGenresLoading
-
-	console.log(genres, selectedRegion);
-
 
 	return (
 		<>
 		<Map>
-			<MapComponent regions={regions} genres={genres} loaded={loaded} setSelectedRegion={setSelectedRegion} />
+			<MapComponent 
+				regions={regions} 
+				genres={genres} 
+				loaded={loaded} 
+				setSelectedRegion={setSelectedRegion} />
 		</Map>
 		<Navbar />
-		<OverlayComponent selectedRegion={selectedRegion} />
+		<OverlayComponent selectedRegion={selectedRegion} closePopup={closePopup} />
 		</>
 	)
 }

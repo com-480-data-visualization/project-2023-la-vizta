@@ -79,11 +79,11 @@ function OverlayComponent( { isPlaying, togglePlaying, flow, onChange }: IOverla
 	
     return (
         <>
-        <div className='absolute flex justify-between items-center cursor-default px-6 py-3 bottom-2 ml-[50%] translate-x-[-50%] w-10/12 rounded backdrop-blur bg-[color:var(--white)] z-[9000]'>
+        <div className='absolute flex justify-between items-center cursor-default px-6 py-3 bottom-3 ml-[50%] translate-x-[-50%] w-10/12 rounded backdrop-blur bg-[color:var(--white)] z-[9000]'>
             <Icon onClick={togglePlaying} className="rounded p-1 text-4xl cursor-pointer hover:bg-[color:var(--white)] active:scale-75 transition-colors" />    
             <DateSlider isPlaying={isPlaying} dates={dates} onChange={onChange} />
         </div>
-        <div className='absolute flex flex-col justify-between items-center cursor-default px-3 py-5 left-2 top-[50%] translate-y-[-50%] rounded backdrop-blur bg-[color:var(--white)] z-[9000]'>
+        <div className='absolute flex flex-col justify-between items-center cursor-default px-3 py-5 left-3 top-[50%] translate-y-[-50%] rounded backdrop-blur bg-[color:var(--white)] z-[9000]'>
             <div className='mb-5 text-black'>Ranks</div>
             <Legend />
         </div>

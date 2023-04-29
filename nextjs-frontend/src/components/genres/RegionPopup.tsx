@@ -1,3 +1,5 @@
+import { FiX } from 'react-icons/fi'
+
 import StreamChart from "./NewStreamChart";
 
 import { GENRE_COLORS, CHART_COLORS } from '~/constants';
@@ -7,6 +9,7 @@ interface IRegionPopup {
   region: Region
 	topGenres: Genre[]
 	tracks: Track[]
+	closePopup: () => void
 }
 
 interface IGenre {
@@ -52,19 +55,22 @@ const CTrack = ({ i, track }: ITrack) => {
 	);
 };
 
-const RegionPopup = ( { region, topGenres, tracks }: IRegionPopup ) => {
+const RegionPopup = ( { region, topGenres, tracks, closePopup }: IRegionPopup ) => {
 	return (
-		<div className="absolute left-10 top-24 px-6 py-4 z-[9000] rounded backdrop-blur bg-[color:var(--white)]">
-			<div className="font-Playfair text-3xl mb-7 underline underline-offset-[10px]">
-				{region}
-			</div>
-			<div className='flex'>
-				<div className="flex flex-col text-base font-Jetbrains">
-					{tracks.map((track, j) => (
-						<CTrack key={`track-${j}`} i={j + 1} track={track} />
-					))}
+		<div className="absolute bottom-0 left-0 p-3 z-[9000] w-full">
+			<div className='relative px-6 py-4 rounded backdrop-blur bg-[color:var(--white)]'>
+				<div className="absolute right-6 rounded p-3 cursor-pointer hover:bg-[color:var(--white)] transition-colors" onClick={closePopup}><FiX className='text-xl' /></div>
+				<div className="font-Playfair text-5xl mb-7">
+					{region}
 				</div>
-				<StreamChart region={region} tracks={tracks} />
+				<div className='grid' style={{ gridTemplateColumns: '20% 80%' }}>
+					<div className="flex flex-col text-base font-Jetbrains">
+						{tracks.map((track, j) => (
+							<CTrack key={`track-${j}`} i={j + 1} track={track} />
+						))}
+					</div>
+					<StreamChart region={region} tracks={tracks} />
+				</div>
 			</div>
 		</div>
 	);

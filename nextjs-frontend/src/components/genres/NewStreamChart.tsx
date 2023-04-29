@@ -39,16 +39,20 @@ export default function StreamChart( { region, tracks }: IStreamChart ) {
 	console.log(datasets);
 
     return (
-		<ResponsiveContainer width={600} height={400}>
+		<ResponsiveContainer width="100%" height={500}>
 			<LineChart
-				width={600}
-				height={300}
 				data={datasets}
+				margin={{
+					top: 0,
+					right: 20,
+					left: 0,
+					bottom: 20,
+				  }}
 			>
 				<CartesianGrid strokeDasharray="3 3" />
 				<Tooltip />
-				<XAxis dataKey="date" />
-				<YAxis domain={[49, 1]} allowDataOverflow={true} />
+				<XAxis dataKey="date" angle={-20} textAnchor="end" dy={3} />
+				<YAxis domain={[49, 1]} allowDataOverflow={true} dx={-3} />
 				{ datasets.map( (dataset, i) => 
 					<Line key={`line-${i}`} type="monotone" dataKey={titles[i]} stroke={CHART_COLORS[i]} strokeWidth={3} />
 				) }
