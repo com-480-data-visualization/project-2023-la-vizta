@@ -1,7 +1,7 @@
 name := """play-scala-seed"""
 organization := "dataviz-backend.peacefulotter.com"
 
-version := "1.0-SNAPSHOT"
+version := "1.0"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, AshScriptPlugin).settings(
     routesImport += "utils.Binders._"
@@ -38,5 +38,5 @@ Docker / daemonUser := "daemon"
 dockerExposedPorts := Seq(9000)
 dockerBaseImage := "openjdk:8-jre-alpine"
 dockerUpdateLatest := true
-dockerEntrypoint := Seq("/opt/docker/bin/play-scala-seed", "-Dconfig.resource=production.conf")
-
+dockerEntrypoint := Seq("/opt/docker/bin/play-scala-seed")
+// dockerEntrypoint := Seq("")

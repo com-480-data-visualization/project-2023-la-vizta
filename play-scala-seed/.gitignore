@@ -10,3 +10,4 @@ target
 /RUNNING_PID
 /build/
 /conf/production.conf
+/conf/application.conf
