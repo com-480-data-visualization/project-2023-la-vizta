@@ -44,7 +44,6 @@ Nevertheless, finding new musics or artists is difficult and the recommendations
 always recommend what we "want" to hear - similar titles as the ones that are already in our playlists. This is were our project comes to life: building an app - a tool - that will allow anyone to discover new genres and new artists in a visual and entertaining manner. 
 
 More concretely, we would like to display a map of the world. Data could be shown as shapes, popups, graphs, colors as well as text. 
-# EDOU -> MORE ON THIS
 The website will consist of a map where each country will have:
 - a color correspoding to the most listened genre 
 - a popup on clickEvent with the top 5 most streamed tracks and a chart to naviguate and see the evolution of their streams over time.
@@ -85,6 +84,20 @@ Number of countries represented: 69 + “global” (world)
 ## Milestone 2 (7th May, 5pm)
 
 **10% of the final grade**
+### Task:
+Two A4 pages describing the project goal.
+• Include sketches of the vizualiation you want to make in your final product.
+• List the tools that you will use for each visualization and which (past or future)
+lectures you will need.
+• Break down your goal into independent pieces to implement. Try to design a
+core visualization (minimal viable product) that will be required at the end.
+Then list extra ideas (more creative or challenging) that will enhance the
+visualization but could be dropped without endangering the meaning of the
+project.
+
+Functional project prototype review.
+• You should have an initial website running with the basic skeleton of the
+visualization/widgets.
 
 
 ## Milestone 3 (4th June, 5pm)

@@ -15,15 +15,11 @@ class CountriesDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConfigP
     private lazy val countries = TableQuery[CountriesTable]
     private val db = dbConfigProvider.get[JdbcProfile].db
     
-//    implicit val getCountriesResult: GetResult[Countries] = GetResult(r =>
-//        Countries(r.<<, r.<<, r.<<, r.<<, r.<<, r.<<)
-//    )
-
-    def getAll: Future[Vector[(Region, ISO, Lat, Lng, GeoJSON)]] =
+    def getAll: Future[Vector[(Region, Lat, Lng, GeoJSON)]] =
         db run {
             sql"""
-				SELECT "name", "iso", "lat", "lng", ST_AsGeoJSON("geom")
+				SELECT "name", "lat", "lng", ST_AsGeoJSON("geom")
 	            FROM countries
-            """.as[(Region, ISO, Lat, Lng, GeoJSON)]
+            """.as[(Region, Lat, Lng, GeoJSON)]
         }
 }

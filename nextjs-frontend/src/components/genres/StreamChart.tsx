@@ -1,4 +1,4 @@
-import React from "react";
+import { useMemo, useEffect } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,8 +11,11 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 
-import { Track } from "~/types";
+import useFetch from '../../hooks/useFetch';
+
+import { Region, Track } from "~/types";
 import { CHART_COLORS, CHART_OPTIONS } from '~/constants';
+import { Rank, Streams } from '../../types';
 
 ChartJS.register(
   CategoryScale,
@@ -25,7 +28,6 @@ ChartJS.register(
 );
 
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
 
 /*
 streamPerTrackPerDate = [
@@ -37,30 +39,34 @@ streamPerTrackPerDate = [
 
 */
 
-
-
 interface IStreamChart {
-    tracks: Track[];
+  region: Region
+  tracks: Track[];
 }
 
-export const StreamChart = ( { tracks }: IStreamChart ) => {
-  console.log(tracks);
+interface HistoriesData {
+	dates: string[]
+	histories: { [id: TrackId]: { ranks: Rank[], streams: Streams[] } }
+}
 
-  let dataset = [];
-  for (let i = 0; i < tracks.length; i++) {
-    dataset.push({
-      label: tracks[i].title,
-      data: [65 + i, 59 + i, 80 + i, 81 + i, 56 + i, 55 + i, 40 - i],
-      borderColor: CHART_COLORS[i],
-      backgroundColor: CHART_COLORS[i],
-    });
-  }
+export default function StreamChart( { region, tracks }: IStreamChart ) {
 
-  const data = {
-    labels /* : date streamPerTrackPerDate.map( (element) => element.date) */,
-    datasets: dataset,
-  };
+	const ids = tracks.map( t => t.id )
+	
+	const { data, isLoading } = useFetch<HistoriesData>(`/clean/histories?region=${region}&ids=${ids.join(',')}`)
 
-  return <Line options={CHART_OPTIONS} data={data} />;
+	if ( isLoading || data === undefined ) 
+		return null
+	
+	const labels = data.dates.map( d => d.split(' ')[0] )
+
+	const datasets = Object.values(data.histories).map( (rankStreams, i) => ({
+		label: tracks[i].title,
+		data: rankStreams.ranks,
+		borderColor: CHART_COLORS[i],
+		backgroundColor: CHART_COLORS[i]
+	}) )
+
+
+    return <Line options={CHART_OPTIONS} data={{labels, datasets}} />;
 };
-export default StreamChart;

@@ -1,19 +1,34 @@
 import { useState } from "react";
 
-import Country from '~/components/Country';
+import LeafletCountry from '~/components/LeafletCountry';
 import RegionPopup from "./RegionPopup";
 import Navbar from '../nav/';
 import Map from '~/components/Map';
 
 import useFetch from "~/hooks/useFetch";
 import { GENRE_COLORS } from "~/constants";
-import { Countries, Route } from "~/types";
+import { Track, Genre, Region, Country, GenresPerRegion } from "~/types";
 
+interface SelectedRegion {
+	region: Region;
+	topGenres: Genre[]
+	tracks: Track[]
+}
 
-function MapComponent( { loaded, regions, genres, setSelectedRegion }: any ) {
+interface IMapComponent {
+	loaded: boolean;
+	regions: Country[] | undefined;
+	genres: GenresPerRegion | undefined;
+	setSelectedRegion: (r: SelectedRegion) => void
+}
+
+function MapComponent( { loaded, regions, genres, setSelectedRegion }: IMapComponent ) {
 
 	const onClick = (i: number) => () => {
-		const [name, _] = regions[i];
+		if ( regions === undefined || genres === undefined )
+			return;
+
+		const { name } = regions[i];
 		setSelectedRegion( {
 			region: name,
 			topGenres: genres.topGenresPerRegion[name],
@@ -23,44 +38,59 @@ function MapComponent( { loaded, regions, genres, setSelectedRegion }: any ) {
 
 	if ( !loaded ) return null
 
-	return regions.map((region, i) => {
-        const name = region[0];
-        const geom = region[4];
-        const tracks = genres.tracksPerRegion[name] || [];
-        const topGenres = genres.topGenresPerRegion[name] || [];
-        const topGenre = topGenres && topGenres[0];
-        const color = GENRE_COLORS[topGenre] || "white";
+	return (
+		<>
+		{ regions !== undefined && genres !== undefined &&
+			regions.map( ({name, geom}, i) => {
+				const tracks = genres.tracksPerRegion[name] || [];
+				const topGenres = genres.topGenresPerRegion[name] || [];
+				const topGenre = topGenres && topGenres[0];
+				const color = GENRE_COLORS[topGenre] || "white";
 
-        return (
-			<Country
-				key={`country-${i}`}
-				color={color}
-				geom={geom}
-				onClick={onClick(i)}
-			/>
-        );
-	} )
+				return (
+					<LeafletCountry
+						key={`country-${i}`}
+						color={color}
+						geom={geom}
+						onClick={onClick(i)}
+					/>
+				);
+			} )
+		}
+		</>
+	)
 }
 
-function OverlayComponent( { selectedRegion }: any ) {
-	return selectedRegion && <RegionPopup {...selectedRegion} />
+interface IOverlayComponent {
+	selectedRegion: SelectedRegion | undefined
+	closePopup: () => void
+}
+
+function OverlayComponent( { selectedRegion, closePopup }: IOverlayComponent ) {
+	return selectedRegion ? <RegionPopup {...selectedRegion} closePopup={closePopup} /> : null
 }
 
 export default function Genres() {
-	const { data: regions, isLoading: isRegionsLoading } = useFetch<Countries>("/countries/all");
-	const { data: genres, isLoading: isGenresLoading } = useFetch("/genres");
+	const { data: regions, isLoading: isRegionsLoading } = useFetch<Country[]>("/countries/all");
+	const { data: genres, isLoading: isGenresLoading } = useFetch<GenresPerRegion>("/genres");	
 
-	const [selectedRegion, setSelectedRegion] = useState(undefined);
+	const [selectedRegion, setSelectedRegion] = useState<SelectedRegion | undefined>(undefined);
+
+	const closePopup = () => setSelectedRegion(undefined)
 
 	const loaded = !isRegionsLoading && !isGenresLoading
 
 	return (
 		<>
 		<Map>
-			<MapComponent regions={regions} genres={genres} loaded={loaded} setSelectedRegion={setSelectedRegion} />
+			<MapComponent 
+				regions={regions} 
+				genres={genres} 
+				loaded={loaded} 
+				setSelectedRegion={setSelectedRegion} />
 		</Map>
 		<Navbar />
-		<OverlayComponent selectedRegion={selectedRegion} />
+		<OverlayComponent selectedRegion={selectedRegion} closePopup={closePopup} />
 		</>
 	)
 }

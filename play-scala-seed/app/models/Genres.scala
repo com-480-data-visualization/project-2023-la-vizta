@@ -1,11 +1,9 @@
 package models
 
-import models.Types.{Artist, Genre, GenreId, Rank, Region, Streams, Title}
+import models.Types.{Genre, TrackId, Rank, Region, Streams}
 
 case class Genres(
-                  id: GenreId,
-				  title: Title,
-				  artist: Artist,
+                  id: TrackId,
 				  region: Region,
 				  streams: Streams,
 				  ranking: Rank,

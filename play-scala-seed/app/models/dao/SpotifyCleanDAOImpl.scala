@@ -5,7 +5,7 @@ import models.Types._
 import models.table.{SpotifyCleanTable, TracksTable}
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.PostgresProfile.api._
-import slick.jdbc.{GetResult, JdbcProfile}
+import slick.jdbc.{GetResult, JdbcProfile, SetParameter}
 import slick.lifted.TableQuery
 
 import javax.inject.Inject
@@ -22,39 +22,6 @@ class SpotifyCleanDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConf
         SpotifyClean(r.<<, r.<<, r.<<, r.<<, r.<<)
     )
     
-    def flowTrack(id: TrackId): Future[Seq[(Region, Date, Rank, Streams)]] = {
-        db run {
-            sql"""
-                SELECT "region", DATE_TRUNC('week', "date"), AVG("rank")::INTEGER as "rank", sum("streams") as "streams"
-                FROM spotify_clean
-                WHERE "id" = $id
-                GROUP BY DATE_TRUNC('week', "date"), "region"
-				ORDER BY DATE_TRUNC('week', "date")
-            """.as[(Region, Date, Rank, Streams)]
-        }
-    }
-    
-    def flowTracks(): Future[Seq[(Title, Artist, TrackId)]] =
-        db run {
-            sql"""
-                SELECT title, artist, s."id"
-                FROM (public.spotify_clean as s join tracks as t on s.id = t.id)
-                GROUP BY title, artist, s."id"
-                ORDER BY count(DISTINCT "region")  desc
-                LIMIT 10
-			""".as[(Title, Artist, TrackId)]
-        }
-    
-    def history(id: TrackId): Future[Seq[(Region, Date, Rank, Streams)]] = {
-        db run {
-            val q = for {
-                s <- spotify
-                if s.id === id
-            } yield (s.region, s.date, s.rank, s.streams)
-            q.result
-        }
-    }
-    
 //    def histories(region: Region, ids: Seq[TrackId]): Future[Seq[SpotifyClean]] = {
 //        val idsString = ids.map(v => f"('${v._1}','${v._2}')").mkString("(", ",", ")")
 //        db run {
@@ -65,22 +32,21 @@ class SpotifyCleanDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConf
 //        }
 //    }
     
-    def histories(region: Region, ids: Seq[TrackId]): Future[Seq[SpotifyClean]] = {
+    def histories(region: Region, ids: Seq[TrackId]): Future[Seq[(TrackId, Date, Rank, Streams)]] = {
         db run {
-            val q = for (
-                s <- spotify
-                if s.region === region && s.id.inSetBind(ids)
-            ) yield s
-            q.result
+//            val q = for (
+//                s <- spotify
+//                if s.region === region && s.id.inSetBind(ids)
+//            ) yield s
+//            q.result
+            val idsString = ids.map(v => f"'${v}'").mkString(",")
+            sql"""
+                SELECT "id", DATE_TRUNC('week', "date") as "date", AVG("rank")::INTEGER as "rank", avg("streams")::INTEGER as "streams"
+                FROM spotify_clean
+                WHERE "region" = $region and "id" in (#${idsString})
+                GROUP BY "id", DATE_TRUNC('week', "date")
+                ORDER BY DATE_TRUNC('week', "date")
+            """.as[(TrackId, Date, Rank, Streams)]
         }
     }
-    
-    def date(d: Date): Future[Seq[(TrackId, Title, Artist, Region, Rank, Streams)]] =
-        db run {
-            val q = for {
-                s <- spotify; t <- tracks
-                if s.id === t.id && s.date === d
-            } yield (s.id, t.title, t.artist, s.region, s.rank, s.streams)
-            q.result
-        }
 }
