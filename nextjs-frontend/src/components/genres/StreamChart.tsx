@@ -4,7 +4,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 
 import useFetch from '../../hooks/useFetch';
 
-import { Region, Track, Rank } from "~/types";
+import { Region, Track, Rank, TrackId } from "~/types";
 import { CHART_COLORS, CHART_OPTIONS } from '~/constants';
 
 interface IStreamChart {
@@ -13,7 +13,7 @@ interface IStreamChart {
 }
 
 interface HistoriesData {
-	dates: string
+	date: string
 	ranked: { id: TrackId, rank: Rank }[]
 }
 
@@ -43,13 +43,13 @@ export default function StreamChart( { region, tracks }: IStreamChart ) {
 	if ( isLoading || data === undefined ) 
 		return null
 	
-	const datasets = data.map( ( { date, ranked }, i) => ({
+	const datasets = data.map( ( { date, ranked }: HistoriesData, i: number) => ({
 		date: date.split(' ')[0], 
 		...ranked.reduce( (acc, cur) => {
-			let { title } = tracks.find( t => t.id === cur.id )
+			let { title } = tracks.find( t => t.id === cur.id ) as Track
 			acc[title] = cur.rank === -1 ? NaN : cur.rank
 			return acc
-		}, {} )
+		}, {} as any )
 	}) )
 
     return (
