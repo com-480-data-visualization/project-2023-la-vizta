@@ -6,5 +6,5 @@ import models.table.GenresTable
 import scala.concurrent.Future
 
 trait GenresDAO {
-	def getGenres: Future[Seq[(TrackId, Title, Artist, Region, Streams, Rank, Genre)]]
+	def get: Future[Seq[(TrackId, Title, Artist, Region, Streams, Rank, Genre)]]
 }

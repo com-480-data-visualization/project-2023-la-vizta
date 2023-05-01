@@ -2,18 +2,18 @@
 import { Color, Genre } from "~/types";
 
 export const GENRE_COLORS: {[genre: Genre]: Color } = {
-    'Alternative': '#3f8efc', // --purple-pizzazz: #f55dd4ff;
+    'Dance': '#3f8efc', // --purple-pizzazz: #f55dd4ff;
     'Arabic':      '#384dabff', // --violet-blue: #384dabff;
-    'Bollywood':   '#e36414', // --robin-egg-blue: #3fd7dfff;
+    'Indian':      '#e36414', // --robin-egg-blue: #3fd7dfff;
     'Hip-Hop/Rap': '#0ead69', // --emerald: #2fdf81ff;
-    'Latino':      '#ffd449', //  blue =    --dark-pastel-green: #42b83eff;
+    'Latin':       '#ffd449', //  blue =    --dark-pastel-green: #42b83eff;
     'Pop':         '#ff006e', // --aureolin: #f3e32cff;
     'Pop/Rock':    '#f94144', // --orange-wheel: #f78a40ff;
-    'Rock':        '#f94144', // --orange-wheel: #f78a40ff;
-    'K-Pop':       '#00f5d4', // --tomato: #ff4e3eff;
+    'Rock':        '#00ffff', // --orange-wheel: #f78a40ff;
+    'Worldwide':   '#00ff00', // --tomato: #ff4e3eff;
     'J-Pop':       '#9d4edd', // --russet: #7a3a0fff;
     'Rap':         '#f00',
-    'Sertanejo':   '#9d4edd'
+    'Brazilian':   '#ff0eff'
 }
 
 

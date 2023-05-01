@@ -45,7 +45,7 @@ export interface Country {
     geom: GeoJSON
 }
 
-export interface GenresPerRegion {
-    tracksPerRegion: { [region: Region]: Track[] };
-    topGenresPerRegion: { [region: Region]: Genre[] };
+export interface GenrePerRegion {
+    tracks: { [region: Region]: Track[] };
+    genres: { [region: Region]: Genre };
 }

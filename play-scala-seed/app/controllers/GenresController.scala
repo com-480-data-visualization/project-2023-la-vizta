@@ -19,9 +19,14 @@ class GenresController @Inject()(val dbConfigProvider: DatabaseConfigProvider, v
     val dao: GenresDAO = new GenresDAOImpl(dbConfigProvider)
     
     case class ResGenres(
-      tracksPerRegion: Map[Region, Seq[GenreWithTrack]],
-      topGenresPerRegion: Map[Region, Seq[Genre]]
+        tracks: Map[Region, Seq[GenreWithTrack]],
+        genres: Map[Region, Genre]
     )
+    
+    case class GenreWithTrack(
+        id: TrackId, title: Title, artist: Artist,
+        region: Region, streams: Streams,
+        rank: Rank, genres: Genre )
 
     implicit val genresWrites: Writes[GenreWithTrack] = (
         (JsPath \ "id").write[TrackId] and
@@ -34,33 +39,21 @@ class GenresController @Inject()(val dbConfigProvider: DatabaseConfigProvider, v
     )(unlift(GenreWithTrack.unapply))
 
     implicit val resGenresWrites: Writes[ResGenres] = (
-        (JsPath \ "tracksPerRegion").write[Map[Region, Seq[GenreWithTrack]]] and
-        (JsPath \ "topGenresPerRegion").write[Map[Region, Seq[Genre]]]
+        (JsPath \ "tracks").write[Map[Region, Seq[GenreWithTrack]]] and
+        (JsPath \ "genres").write[Map[Region, Genre]]
     )(unlift(ResGenres.unapply))
 
-    case class GenreWithTrack(
-         id: TrackId, title: Title, artist: Artist,
-         region: Region, streams: Streams,
-         rank: Rank, genre: Genre )
 
-    def getGenres: Action[AnyContent] = Action.async {
-        dao.getGenres.map( r => {
-            val tracksPerRegion = r
+    def get: Action[AnyContent] = Action.async {
+        dao.get.map( r => {
+            val tracks = r
                 .map(GenreWithTrack tupled)
                 .groupBy(_.region)
-
-            val topGenresPerRegion = tracksPerRegion
-              .view
-              .mapValues(_.groupBy(_.genre))
-              .mapValues( m => m.view
-                .mapValues(_.foldLeft(0)((acc, cur) => acc + cur.streams))
-                .toSeq
-                .sortBy(-_._2)
-                .map(_._1)
-              )
-              .toMap
-
-            val res = ResGenres(tracksPerRegion, topGenresPerRegion)
+            val genres = tracks map { case (region, ts) => {
+                val gs = ts.flatMap(t => t.genres.split(",").map(g => (t.streams, g)))
+                (region, gs.groupBy(_._2).view.mapValues(seq => seq.map(_._1).sum).maxBy(_._2)._1)
+            } }
+            val res = ResGenres(tracks, genres)
             Ok(Json.toJson(res))
         } )
     }

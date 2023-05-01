@@ -7,4 +7,4 @@ case class Genres(
 				  region: Region,
 				  streams: Streams,
 				  ranking: Rank,
-				  genre: Genre );
+				  genres: Genre );

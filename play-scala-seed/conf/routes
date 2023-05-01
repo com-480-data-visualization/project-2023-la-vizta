@@ -5,7 +5,7 @@
 
 # An example controller showing a sample home page
 GET     /countries/all              controllers.CountriesController.getAll
-GET     /genres                     controllers.GenresController.getGenres
+GET     /genres                     controllers.GenresController.get
 GET     /clean/histories            controllers.SpotifyCleanController.histories(region: String, ids: Seq[String])
 GET     /flow/tracks                controllers.FlowController.tracks
 GET     /flow/track                 controllers.FlowController.track(id: String)

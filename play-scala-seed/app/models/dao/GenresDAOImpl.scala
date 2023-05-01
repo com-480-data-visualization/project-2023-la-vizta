@@ -18,17 +18,13 @@ class GenresDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConfigProv
 	
 	private val db = dbConfigProvider.get[JdbcProfile].db
 
-//	implicit val getGenresResult: GetResult[Genres] = GetResult(r =>
-//		Genres(r.<<, r.<<, r.<<, r.<<, r.<<, r.<<, r.<<)
-//	)
-
-	def getGenres: Future[Seq[(TrackId, Title, Artist, Region, Streams, Rank, Genre)]] =
+	def get: Future[Seq[(TrackId, Title, Artist, Region, Streams, Rank, Genre)]] =
 		db run {
 			val q = for {
 				g <- genres
 				t <- tracks
 				if t.id === g.id
-			} yield (t.id, t.title, t.artist, g.region, g.streams, g.rank, g.genre)
+			} yield (t.id, t.title, t.artist, g.region, g.streams, g.rank, g.genres)
 			q.result
 		}
 }
