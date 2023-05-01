@@ -1,6 +1,6 @@
 import { FiX } from 'react-icons/fi'
 
-import StreamChart from "./NewStreamChart";
+import StreamChart from "./StreamChart";
 
 import { GENRE_COLORS, CHART_COLORS } from '~/constants';
 import { Region, Track, Genre } from "~/types";

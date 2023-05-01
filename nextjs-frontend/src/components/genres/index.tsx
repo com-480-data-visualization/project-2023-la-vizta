@@ -30,7 +30,9 @@ const latOffset = (z: number) => Math.pow(2, 5 - z) * 7.5
 function MapComponent( { loaded, regions, genres, selectedRegion, setSelectedRegion }: IMapComponent ) {
 
 	const onClick = (region: Region) => ({ latlng }: LeafletMouseEvent, map: any) => {
-		setSelectedRegion( region )
+		setTimeout(() => {
+			setSelectedRegion( region )
+		}, 750);
 		const { lat, lng } = latlng
 		const zoom = map.getZoom()
 		map.flyTo( {lat: lat - latOffset(zoom), lng}, map.getZoom(), {animate: true, duration: 0.75})
@@ -75,7 +77,18 @@ interface IOverlayComponent {
 }
 
 function OverlayComponent( { region, tracks, genres, closePopup }: IOverlayComponent ) {
-	return region ? <RegionPopup tracks={tracks[region]} genre={genres[region]} region={region} closePopup={closePopup} /> : null
+	return (
+		<>
+		{ region ? <RegionPopup tracks={tracks[region]} genre={genres[region]} region={region} closePopup={closePopup} /> : null }
+		<div className='absolute flex flex-col px-5 py-5 rounded backdrop-blur bg-[color:var(--white)] left-3 top-[40%] translate-y-[-50%]  z-[9000] hover:translate-x-[0%] transition-transform'>
+			{ Object.entries(GENRE_COLORS).map( ([genre, color], i) => 
+				<div key={`legend-${i}`} className='flex items-center gap-3 font-Quicksand'>
+					<div className='w-4 h-4 rounded' style={{backgroundColor: color}}></div>{genre}
+				</div>
+			) }
+        </div>
+		</>
+	)
 } 
 
 export default function Genres() {

@@ -1,43 +1,11 @@
 import { useMemo, useEffect } from 'react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { Line } from "react-chartjs-2";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+
 
 import useFetch from '../../hooks/useFetch';
 
-import { Region, Track } from "~/types";
+import { Region, Track, Rank } from "~/types";
 import { CHART_COLORS, CHART_OPTIONS } from '~/constants';
-import { Rank, Streams } from '../../types';
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
-
-
-/*
-streamPerTrackPerDate = [
-  { 
-    id: "name of the track",
-    date: "2020",
-    nbStream: 100,
-  },
-
-*/
 
 interface IStreamChart {
   region: Region
@@ -45,28 +13,50 @@ interface IStreamChart {
 }
 
 interface HistoriesData {
-	dates: string[]
-	histories: { [id: TrackId]: { ranks: Rank[], streams: Streams[] } }
+	dates: string
+	ranked: { id: TrackId, rank: Rank }[]
 }
 
 export default function StreamChart( { region, tracks }: IStreamChart ) {
 
 	const ids = tracks.map( t => t.id )
+	const titles = tracks.map( t => t.title )
 	
-	const { data, isLoading } = useFetch<HistoriesData>(`/clean/histories?region=${region}&ids=${ids.join(',')}`)
+	const { data, isLoading } = useFetch<HistoriesData[]>(`/clean/histories?region=${region}&ids=${ids.join(',')}`)
 
 	if ( isLoading || data === undefined ) 
 		return null
 	
-	const labels = data.dates.map( d => d.split(' ')[0] )
-
-	const datasets = Object.values(data.histories).map( (rankStreams, i) => ({
-		label: tracks[i].title,
-		data: rankStreams.ranks,
-		borderColor: CHART_COLORS[i],
-		backgroundColor: CHART_COLORS[i]
+	const datasets = data.map( ( { date, ranked }, i) => ({
+		date: date.split(' ')[0], 
+		...ranked.reduce( (acc, cur) => {
+			let { title } = tracks.find( t => t.id === cur.id )
+			acc[title] = cur.rank === -1 ? NaN : cur.rank
+			return acc
+		}, {} )
 	}) )
 
-
-    return <Line options={CHART_OPTIONS} data={{labels, datasets}} />;
+    return (
+		<ResponsiveContainer width="100%" height={400}>
+			<LineChart
+				data={datasets}
+				margin={{
+					top: 0,
+					right: 20,
+					left: 0,
+					bottom: 20,
+				  }}
+			>
+				<CartesianGrid strokeDasharray="3 3" />
+				<Tooltip />
+				<XAxis dataKey="date" angle={-20} textAnchor="end" dy={3} />
+				<YAxis domain={[50, 0]} allowDataOverflow={true} dx={-3} tickFormatter={(x, i) => {
+					return i == 0 ? x + 1 : x
+				}} />
+				{ datasets.map( (dataset, i) => 
+					<Line key={`line-${i}`} type="monotone" dataKey={titles[i]} stroke={CHART_COLORS[i]} strokeWidth={3} />
+				) }
+			</LineChart>
+		</ResponsiveContainer>
+    )
 };
