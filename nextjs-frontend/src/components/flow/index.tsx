@@ -90,8 +90,8 @@ function OverlayComponent( { isPlaying, togglePlaying, flow, onChange }: IOverla
 	
     return (
         <>
-        <div className='absolute flex justify-between items-center cursor-default px-6 py-3 bottom-3 ml-[50%] translate-x-[-50%] w-10/12 rounded backdrop-blur bg-[color:var(--white)] z-[9000]'>
-            <Icon onClick={togglePlaying} className="rounded p-1 text-4xl cursor-pointer hover:bg-[color:var(--white)] active:scale-75 transition-colors" />    
+        <div className='absolute flex justify-between items-center cursor-default px-6 pt-3 pb-6 bottom-3 ml-[50%] translate-x-[-50%] w-10/12 rounded backdrop-blur bg-[color:var(--white)] z-[9000]'>
+            <Icon onClick={togglePlaying} className="text-[#000000ac] rounded p-1 text-5xl cursor-pointer mt-3 hover:bg-[color:var(--white)] active:scale-75 transition-colors" />    
             <DateSlider isPlaying={isPlaying} dates={dates} onChange={onChange} />
         </div>
         <div className='absolute flex flex-col justify-between items-center cursor-default px-3 py-5 left-3 top-[50%] translate-y-[-50%] rounded backdrop-blur bg-[color:var(--white)] z-[9000]'>
@@ -122,7 +122,7 @@ function NavComponent( { tracks, isTracksLoading }: INavComponent ) {
 
     return (
         <Dropdown 
-            defaultRoute={routes[0]} 
+            defaultRoute={routes[routes.length - 1]} 
             routes={routes} 
             anchor='right'
             onChange={onChange} />
@@ -135,7 +135,7 @@ export default function Flow() {
     const { data: tracks, isLoading: isTracksLoading } = useFetch<SmallTrack[]>(`/flow/tracks`);
 
     const { query } = useRouter()
-    const id: string | undefined = 'id' in query ? query.id : tracks !== undefined && tracks[0].id
+    const id: string | undefined = 'id' in query ? query.id : tracks !== undefined && tracks[tracks.length - 1].id
 
     const { data: regions, isLoading: isRegionsLoading } = useFetch<Country[]>("/countries/all");
 	const { data: unorderedFlow, isLoading: isFlowLoading } = useFetch<FlowPerDatePerRegion>(`/flow/track?id=${id}`);

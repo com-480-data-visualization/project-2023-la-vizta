@@ -1,5 +1,5 @@
 import { useMemo, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts';
 
 
 import useFetch from '../../hooks/useFetch';
@@ -16,6 +16,22 @@ interface HistoriesData {
 	dates: string
 	ranked: { id: TrackId, rank: Rank }[]
 }
+
+const CustomTooltip = ({ active, payload, label }: any) => {
+	if (!active || !payload)
+		return null 
+	return (
+		<div className='border-none bg-white px-4 py-2 ml-3'>
+			<p className='font-JetBrains text-lg'>{label}</p>
+			{ payload.map( ({dataKey, color, value}: any, i: number) => (
+				<div key={`payload-${i}`} className='flex items-center'>
+					<div className='w-3 h-3 mx-3' style={{backgroundColor: color}}></div>
+					<p className='font-JetBrains'>{dataKey}: <b>{value}</b></p>
+				</div>
+			) )}
+		</div>
+	);
+};
 
 export default function StreamChart( { region, tracks }: IStreamChart ) {
 
@@ -42,17 +58,21 @@ export default function StreamChart( { region, tracks }: IStreamChart ) {
 				data={datasets}
 				margin={{
 					top: 0,
-					right: 20,
-					left: 0,
+					right: 50,
+					left: 20,
 					bottom: 20,
 				  }}
 			>
 				<CartesianGrid strokeDasharray="3 3" />
-				<Tooltip />
-				<XAxis dataKey="date" angle={-20} textAnchor="end" dy={3} />
+				<Tooltip content={<CustomTooltip />} wrapperStyle={{ outline: 'none' }} />
+				<XAxis dataKey="date" angle={-20} textAnchor="end" dy={3}>
+					<Label className='font-JetBrains' fill='black' position="insideBottomRight" dy={15} dx={50}>Date</Label>
+				</XAxis>
 				<YAxis domain={[50, 0]} allowDataOverflow={true} dx={-3} tickFormatter={(x, i) => {
 					return i == 0 ? x + 1 : x
-				}} />
+				}}>
+					<Label className='font-JetBrains' fill='black' position="insideTopLeft" dy={0} dx={-15}>Rank</Label>
+				</YAxis>
 				{ datasets.map( (dataset, i) => 
 					<Line key={`line-${i}`} type="monotone" dataKey={titles[i]} stroke={CHART_COLORS[i]} strokeWidth={3} />
 				) }

@@ -20,11 +20,17 @@ const IOSSlider = styled(Slider)( () => ({
 		},
 	},
 	'& .MuiSlider-rail': {
+		height: 11,
 		opacity: 1,
 		backgroundColor: '#bfbfbf',
 	},
+	'& .MuiSlider-mark': {
+		backgroundColor: 'transparent',
+	},
 	'& .MuiSlider-track': {
-		color: '#47F'
+		height: 7,
+		background: 'linear-gradient(90deg, #66eeee, #668cee)',
+		color: 'transparent'
 	},
 }));
 
@@ -38,7 +44,7 @@ const delay = 50
 
 function Label( { selected, date }: any ) {
 	return (
-		<p className={`text-xs rotate-45 translate-x-2 translate-y-1 font-JetBrains ${selected && 'font-bold'}`}>
+		<p className={`text-md rotate-45 translate-x-2 translate-y-2 font-JetBrains ${selected && 'font-bold'}`}>
 			{date.split(' ')[0].replace('2021-', '')}
 		</p>
 	)
@@ -75,7 +81,7 @@ export default function DateSlider( { isPlaying, dates, onChange }: IDateSlider 
 	}, [currentTime] )
     
     return (
-        <Box sx={{ width: '94%', marginRight: '1rem' }}>
+        <Box sx={{ width: '95%', marginRight: '1rem' }}>
             <IOSSlider
 				slotProps={{
 					thumb: {
