@@ -32,10 +32,14 @@ html, body {
 }
 
 .leaflet-popup-content-wrapper {
-  border-radius: 2px !important;
+  border-radius: 0.25rem !important;
   backdrop-filter: blur(4px);
   background: var(--white) !important;
   padding: 5px 20px 5px 10px !important;
+}
+
+.leaflet-popup-tip-container {
+  margin-top: 0px !important;
 }
 
 .leaflet-popup-content-wrapper p {

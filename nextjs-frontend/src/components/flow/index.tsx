@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { Popup } from 'react-leaflet';
 import { useRouter } from 'next/router';
 import { FiPlay, FiPause } from 'react-icons/fi'
 import Color from 'color'
@@ -29,27 +30,30 @@ interface IMapComponent {
 function MapComponent( { regions, flow, date }: IMapComponent ) {
    
     const dates = Object.values(flow)
+    const decimalDate = date - Math.floor(date)
     const prevFlowsAtDate: FlowPerRegion = dates[Math.floor(date)]
     const nextFlowsAtDate: FlowPerRegion = dates[Math.ceil(date)]
 
-    // console.log(date, prevFlowsAtDate['Norway'], nextFlowsAtDate['Norway']);
-    const decimalDate = date - Math.floor(date)
-
     const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a;
+
+    const getColor = (name: Region) => {
+        const { rank: rank1, streams: streams1 } = prevFlowsAtDate[name]
+        const { rank: rank2, streams: streams2 } = nextFlowsAtDate[name]
+
+        const rank = lerp(rank1, rank2, decimalDate)
+        const r = (1 - rank / maxRank) * 255
+        const color = Color.rgb(0, r, 255).string()
+        return { rank, color }
+    }
 
     return (
         <>
         { prevFlowsAtDate && nextFlowsAtDate && regions
             .map( ( {name, geom}: Country, i: number) => {
-                if ( !(name in prevFlowsAtDate && name in nextFlowsAtDate) )
-                    return null
 
-                const { rank: rank1, streams: streams1 } = prevFlowsAtDate[name]
-                const { rank: rank2, streams: streams2 } = nextFlowsAtDate[name]
-
-                const rank = lerp(rank1, rank2, decimalDate)
-                const r = (1 - rank / maxRank) * 255
-                const color = Color.rgb(0, r, 255).string()
+                const { rank, color } = name in prevFlowsAtDate && name in nextFlowsAtDate 
+                    ? getColor(name)
+                    : { rank: 'None', color: '#000' }
 
                 return (
                     <LeafletCountry
@@ -57,7 +61,14 @@ function MapComponent( { regions, flow, date }: IMapComponent ) {
                         color={color}
                         geom={geom}
                         onClick={() => {}}
-                    />
+                    > 
+                        <Popup>
+                            <div>
+                                <p className="font-Playfair text-3xl">{name}</p>
+                                <p className="font-Quicksand text-xl">Rank: <b>{rank}</b></p>
+                            </div>
+                        </Popup>
+                    </LeafletCountry>
                 );
             } )
         }

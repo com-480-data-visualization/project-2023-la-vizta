@@ -1,4 +1,5 @@
 
+import { ReactNode } from 'react'
 import { GeoJSON, useMap } from 'react-leaflet';
 import Color from 'color'
 import { LeafletEventHandlerFnMap, LeafletMouseEvent } from 'leaflet';
@@ -7,12 +8,13 @@ interface IRegion {
     color: string;
     geom: string;
     onClick: (e: LeafletMouseEvent, map: any) => void;
+    children?: ReactNode
 }
 
 const highlight = (color: string) => Color(color).saturate(0.5).lighten(0.2)
 const darken = (color: string) => Color(color).saturate(0.5).darken(0.2)
 
-export default function LeafletCountry( { color, geom, onClick }: IRegion ) 
+export default function LeafletCountry( { color, geom, onClick, children }: IRegion ) 
 {
     const map = useMap()
 
@@ -30,6 +32,8 @@ export default function LeafletCountry( { color, geom, onClick }: IRegion )
         <GeoJSON 
             style={{fillColor: color, color, weight: 1} as any} 
 	        data={JSON.parse(geom)} 
-            eventHandlers={eventHandlers} />
+            eventHandlers={eventHandlers}>
+                { children }
+        </GeoJSON>
     )
 }
