@@ -100,6 +100,35 @@ Functional project prototype review.
 visualization/widgets.
 
 
+#### Introduction:
+Music is becoming more and more a way to live the daily moments of our life. We listen to music when we are entertained, when we are working, when we are sad or happy. To understand what people listen to is to understand who they are.
+Our goal with this project is to allow people to have an overview of what people in each country are listening to, but also to be able to discover new artists from different cultures, or simply to be up to date on the best tracks of the last few years.
+
+#### Goal and subgoals of the project: 
+We want to develop a website with a map that would show the most listened genre per country. For each country, the 5 most streamed music in 2021 can be shown in a popup after clicking on the said country, along with a graph that depicts the evolution of ranks for these 5 songs. Moreover, we also would like to create a different map, this time showing the “propagation” of a specific music in the top50, i.e. the evolution of a song on the top50 ranking per country over time.
+
+#### Core steps:
+1. Spotify / Shazam and OSM data collection, preprocessing and storage: 
+Firstly, the “spotify charts” dataset from Kaggle needs to be preprocessed because the formatting is not ideal (need to extract the track id from the url for instance), there are some missing values (the streams column is null for the chart called viral50), and we will limit ourselves to data from 2021 because of hardware limitations (memory and speed).
+Secondly, we need to compute the 5 most listened tracks of each country from the 2021 Spotify charts data that we preprocessed.
+Thirdly, the Shazam API will be queried to retrieve the genres associated with each track.
+Fourthly, the OSM data will be fetched using the Overpass API to get the countries shape as Geometry objects (PostgreSQL type)
+Finally, all this data will be stored in tables in a PostgreSQL database.
+2. Map, popup and other components integration:
+The web components will be built using Next.js, a trendy Javascript framework based on React. The map will be displayed using the “leaflet” package and charts will be plotted using the “recharts” package.
+3. Backend architecture:
+The last part to make this project come together is the backend, which will mainly act as a link between the frontend and the database. It will be built in Scala using the Play framework for the server and the Slick package for establishing and querying the Postgres database.
+
+#### Tools and lectures:
+1. Map (lecture 8): We will use a map to represent our data visualization. We needed to define what type of map we were going to use and how we would represent the data on it. We decided to use a normal world map in 2d and we used colors to represent the genre of the top music listened for each country. We mainly used the leaflet library to represent the map. 
+2. Color choice (lecture 6) and Designing Viz (lecture 7): We took into account lecture 6 and 7 to choose our visual encodings. Creating a map that is uncluttered and colorful while trying to avoid overwhelming the user is one of our focuses. We will strive to share our data in the most simple and easy-to-use manner.
+
+#### Sketches:  
+1. In the following screenshot, one can see colors on countries in a map. Each color represents the “main genre” computed from the 5 most streamed tracks.
+![My Image](Data_readme/Screen_milestone2.png)
+2. On this second screenshot, we can see the pop-up that appears when one clicks on a country. The top 5 songs for the country are listed with their associated genres, and a chart plots the evolution of each music in terms of rank on the top50 over a year.
+![My Image2](Data_readme/Screen_milestone2_2.png)
+
 ## Milestone 3 (4th June, 5pm)
 
 **80% of the final grade**
