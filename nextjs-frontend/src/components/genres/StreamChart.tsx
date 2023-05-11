@@ -7,6 +7,8 @@ import useFetch from '../../hooks/useFetch';
 import { Region, Track, Rank } from "~/types";
 import { CHART_COLORS, CHART_OPTIONS } from '~/constants';
 
+const MAX_Y = 50
+
 interface IStreamChart {
   region: Region
   tracks: Track[];
@@ -47,7 +49,7 @@ export default function StreamChart( { region, tracks }: IStreamChart ) {
 		date: date.split(' ')[0], 
 		...ranked.reduce( (acc, cur) => {
 			let { title } = tracks.find( t => t.id === cur.id )
-			acc[title] = cur.rank === -1 ? NaN : cur.rank
+			acc[title] = cur.rank === -1 ? NaN : (MAX_Y - cur.rank)
 			return acc
 		}, {} )
 	}) )
@@ -68,7 +70,7 @@ export default function StreamChart( { region, tracks }: IStreamChart ) {
 				<XAxis dataKey="date" angle={-20} textAnchor="end" dy={3}>
 					<Label className='font-JetBrains' fill='black' position="insideBottomRight" dy={15} dx={50}>Date</Label>
 				</XAxis>
-				<YAxis domain={[50, 0]} allowDataOverflow={true} dx={-3} tickFormatter={(x, i) => {
+				<YAxis domain={[0, MAX_Y]} allowDataOverflow={true} dx={-3} tickFormatter={(x, i) => {
 					return i == 0 ? x + 1 : x
 				}}>
 					<Label className='font-JetBrains' fill='black' position="insideTopLeft" dy={0} dx={-15}>Rank</Label>
