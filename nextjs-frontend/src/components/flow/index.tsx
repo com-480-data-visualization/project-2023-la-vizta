@@ -135,7 +135,7 @@ export default function Flow() {
     const { data: tracks, isLoading: isTracksLoading } = useFetch<SmallTrack[]>(`/flow/tracks`);
 
     const { query } = useRouter()
-    const id: string | undefined = 'id' in query ? query.id : tracks !== undefined && tracks[tracks.length - 1].id
+    const id: string | false = 'id' in query ? query.id as string : tracks !== undefined && tracks[tracks.length - 1].id
 
     const { data: regions, isLoading: isRegionsLoading } = useFetch<Country[]>("/countries/all");
 	const { data: unorderedFlow, isLoading: isFlowLoading } = useFetch<FlowPerDatePerRegion>(`/flow/track?id=${id}`);

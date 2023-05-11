@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { LeafletMouseEvent } from 'leaflet';
 import Color from 'color'
 import Fade from '@mui/material/Fade';
 
@@ -16,16 +17,12 @@ interface IMapComponent {
 	loaded: boolean;
 	showPopup: boolean;
 	regions: Country[] | undefined;
-	genres: GenresPerRegion | undefined;
+	genres: { [region: Region]: Genre };
 	selectedRegion: Region | undefined;
 	setSelectedRegion: (r: Region) => void
 	setShowPopup: (s: boolean) => void
 }
 
-// 2: 60
-// 3: 30
-// 4: 15
-// 5: 7.5
 
 const LAT_OFFSET = 15
 const FLYTO_ZOOM = 4

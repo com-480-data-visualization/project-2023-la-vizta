@@ -12,6 +12,7 @@ export interface DropdownOption {
 
 export type Geometry = string;
 
+export type TrackId = string;
 export type Title = string;
 export type Artist = string;
 export type Region = string;
