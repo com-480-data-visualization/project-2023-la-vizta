@@ -1,1 +1,1 @@
-docker run -d -p 9001:9001 nextjs-docker
+docker run -d -p 9001:9001 dataviz-nextjs

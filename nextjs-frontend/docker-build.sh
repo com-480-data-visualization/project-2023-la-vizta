@@ -1,1 +1,1 @@
-docker build -t nextjs-docker .
+docker build -t dataviz-nextjs .

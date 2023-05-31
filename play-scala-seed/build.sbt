@@ -38,5 +38,5 @@ Docker / daemonUser := "daemon"
 dockerExposedPorts := Seq(9000)
 dockerBaseImage := "openjdk:8-jre-alpine"
 dockerUpdateLatest := true
-dockerEntrypoint := Seq("/opt/docker/bin/play-scala-seed")
+dockerEntrypoint := Seq("./bin/play-scala-seed")
 // dockerEntrypoint := Seq("")
