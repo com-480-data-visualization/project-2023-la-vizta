@@ -53,7 +53,7 @@ function MapComponent( { regions, flow, date }: IMapComponent ) {
 
                 const { rank, color } = name in prevFlowsAtDate && name in nextFlowsAtDate 
                     ? getColor(name)
-                    : { rank: 'None', color: '#000' }
+                    : { rank: 'None', color: '#333' }
 
                 return (
                     <LeafletCountry
@@ -65,7 +65,7 @@ function MapComponent( { regions, flow, date }: IMapComponent ) {
                         <Popup>
                             <div>
                                 <p className="font-Playfair text-3xl">{name}</p>
-                                <p className="font-Quicksand text-xl">Rank: <b>{rank}</b></p>
+                                <p className="font-Quicksand text-xl">{isNaN(rank) ? 'Not in top50' : <>Rank: <b>{Math.round(rank)}</b></>}</p>
                             </div>
                         </Popup>
                     </LeafletCountry>
